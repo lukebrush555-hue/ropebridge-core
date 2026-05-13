@@ -1,107 +1,190 @@
-.rb-seal {
-  width: 5.5rem;
-  height: 5.5rem;
-  margin: 0 auto var(--rb-space-5);
+.rb-card {
+  border: 1px solid rgba(20, 36, 22, 0.1);
+  border-radius: var(--rb-radius-xl);
+  background: var(--rb-surface);
+  box-shadow: var(--rb-shadow-card);
 }
 
-.rb-recognition {
-  margin: 0 0 var(--rb-space-4);
-  color: var(--rb-color-olive);
-  font-size: 0.95rem;
-  font-weight: 650;
+.rb-flow-card {
+  padding: 28px;
 }
 
-.rb-offer-image {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border: 1px solid var(--rb-color-line);
-  border-radius: var(--rb-radius-lg);
-  box-shadow: 0 1.25rem 3rem var(--rb-color-shadow);
-  object-fit: cover;
+.rb-brand-lockup,
+.rb-vendor-lockup {
+  min-width: 0;
 }
 
-.rb-title {
-  margin: var(--rb-space-6) 0 var(--rb-space-3);
-  color: var(--rb-color-olive-deep);
+.rb-brand-name,
+.rb-vendor-name {
+  margin: 0;
+  color: var(--rb-text-primary);
   font-family: var(--rb-font-serif);
-  font-size: clamp(2.35rem, 12vw, 4.25rem);
-  font-weight: 500;
-  line-height: 0.92;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
 }
 
-.rb-description {
-  margin: 0 auto var(--rb-space-6);
-  max-width: 24rem;
-  color: var(--rb-color-olive-muted);
-  font-size: 1rem;
-  line-height: 1.6;
+.rb-brand-subtitle,
+.rb-vendor-subtitle {
+  margin: 8px 0 0;
+  color: var(--rb-color-brass-500);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.rb-seal {
+  display: block;
+  flex: 0 0 auto;
+  width: 76px;
+  height: 76px;
+  border-radius: 999px;
+  background: url("../../images/ropebridge-seal.svg") center / contain no-repeat;
+}
+
+.rb-field-stack {
+  display: grid;
+  gap: 18px;
+  margin-top: var(--rb-space-3);
+}
+
+.rb-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(20, 36, 22, 0.68);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rb-input,
+.rb-select {
+  width: 100%;
+  min-height: 56px;
+  border: 1px solid rgba(20,36,22,0.14);
+  border-radius: 16px;
+  background: rgba(255, 250, 242, 0.82);
+  color: var(--rb-text-primary);
+  padding: 14px 16px;
+  font-size: 17px;
+}
+
+.rb-input:focus-visible,
+.rb-select:focus-visible,
+.rb-button:focus-visible,
+.rb-link-row:focus-visible,
+.rb-check-row:focus-within {
+  outline: none;
+  box-shadow: var(--rb-shadow-focus);
 }
 
 .rb-button {
-  display: inline-flex;
-  min-height: 3.25rem;
-  width: min(100%, 20rem);
+  display: inline-grid;
+  width: 100%;
+  min-height: 60px;
+  place-items: center;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(90deg, #334323, #5f7044, #334323);
+  color: #fff8ec;
+  cursor: pointer;
+  font-family: var(--rb-font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: var(--rb-shadow-button);
+}
+
+.rb-button:active {
+  transform: translateY(1px);
+}
+
+.rb-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.rb-check-row {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 12px;
+  align-items: start;
+  color: rgba(63,63,59,0.62);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.rb-check-row input {
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  accent-color: var(--rb-accent-pressed);
+}
+
+.rb-image-container {
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--rb-surface);
+  aspect-ratio: 4 / 3;
+  box-shadow: var(--rb-shadow-card-soft);
+}
+
+.rb-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rb-link-stack {
+  display: grid;
+  gap: 10px;
+  margin-top: var(--rb-space-2);
+}
+
+.rb-link-row {
+  display: flex;
+  min-height: 56px;
   align-items: center;
-  justify-content: center;
-  border: 1px solid var(--rb-color-olive-deep);
-  border-radius: var(--rb-radius-md);
-  background: var(--rb-color-olive-deep);
-  color: var(--rb-color-paper);
-  font-weight: 750;
-  letter-spacing: 0;
+  justify-content: space-between;
+  gap: var(--rb-space-2);
+  border: 1px solid rgba(20,36,22,0.08);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.5);
+  color: var(--rb-text-primary);
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: 600;
   text-decoration: none;
 }
 
-.rb-button:hover,
-.rb-button:focus-visible {
-  background: var(--rb-color-olive);
+.rb-status {
+  min-height: 22px;
+  margin: var(--rb-space-2) 0 0;
+  color: var(--rb-text-secondary);
+  font-size: 14px;
+  line-height: 1.4;
 }
 
-.rb-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
+.rb-status.is-error {
+  color: var(--rb-color-error);
 }
 
-.rb-limit {
-  margin: var(--rb-space-4) 0 0;
-  color: var(--rb-color-brass-deep);
-  font-size: 0.85rem;
-  font-weight: 650;
+.rb-status.is-success {
+  color: var(--rb-color-success);
 }
 
-.rb-form {
-  display: grid;
-  gap: var(--rb-space-4);
-  margin-top: var(--rb-space-6);
-  text-align: left;
+.rb-powered-by {
+  margin-top: 30px;
+  color: rgba(63,63,59,0.48);
+  font-family: var(--rb-font-serif);
+  font-size: 14px;
+  text-align: center;
 }
 
-.rb-field {
-  display: grid;
-  gap: var(--rb-space-2);
-  color: var(--rb-color-olive);
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-
-.rb-input {
-  min-height: 3rem;
-  width: 100%;
-  border: 1px solid var(--rb-color-line);
-  border-radius: var(--rb-radius-md);
-  background: var(--rb-color-paper);
-  color: var(--rb-color-olive-deep);
-  padding: 0.75rem 0.9rem;
-}
-
-.rb-input:focus {
-  border-color: var(--rb-color-brass);
-  outline: 3px solid rgba(184, 138, 61, 0.22);
-}
-
-.rb-connected {
-  border: 1px solid var(--rb-color-line);
-  border-radius: var(--rb-radius-lg);
-  background: rgba(255, 250, 240, 0.74);
-  padding: var(--rb-space-8) var(--rb-space-5);
+@media (min-width: 768px) {
+  .rb-flow-card {
+    padding: 34px;
+  }
 }
