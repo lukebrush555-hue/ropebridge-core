@@ -1,33 +1,68 @@
 :root {
+  --rb-color-ink-900: #142416;
+  --rb-color-ink-700: #344134;
+  --rb-color-ink-500: #77776f;
+
+  --rb-color-paper-000: #fbf8f2;
+  --rb-color-paper-100: #f6f0e7;
+  --rb-color-paper-200: #e9dfcf;
+
+  --rb-color-olive-300: #b7c495;
+  --rb-color-olive-500: #5f7044;
+  --rb-color-olive-700: #334323;
+
+  --rb-color-brass-300: #ddb978;
+  --rb-color-brass-500: #bb751d;
+  --rb-color-brass-700: #8e5618;
+
+  --rb-color-success: #5f7044;
+  --rb-color-warning: #bb751d;
+  --rb-color-error: #9f3a2c;
+  --rb-color-info: #546778;
+
+  --rb-bg: #f4eee5;
+  --rb-surface: #fffdf8;
+  --rb-surface-raised: #fffaf2;
+
+  --rb-text-primary: var(--rb-color-ink-900);
+  --rb-text-secondary: #3f3f3b;
+
+  --rb-accent: var(--rb-color-olive-500);
+  --rb-accent-pressed: var(--rb-color-olive-700);
+  --rb-accent-soft: rgba(95, 112, 68, 0.12);
+
+  --rb-border-muted: rgba(20, 36, 22, 0.1);
+
+  --rb-font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  --rb-font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+
+  --rb-space-0: 0;
+  --rb-space-0-5: 4px;
+  --rb-space-1: 8px;
+  --rb-space-1-5: 12px;
+  --rb-space-2: 16px;
+  --rb-space-3: 24px;
+  --rb-space-4: 32px;
+  --rb-space-6: 48px;
+  --rb-space-8: 64px;
+
+  --rb-radius-sm: 8px;
+  --rb-radius-md: 12px;
+  --rb-radius-lg: 18px;
+  --rb-radius-xl: 28px;
+  --rb-radius-full: 999px;
+
+  --rb-shadow-card: 0 24px 70px rgba(43, 35, 22, 0.10);
+  --rb-shadow-card-soft: 0 12px 34px rgba(43, 35, 22, 0.08);
+  --rb-shadow-button: 0 10px 22px rgba(51, 67, 35, 0.22);
+  --rb-shadow-focus: 0 0 0 4px rgba(95, 112, 68, 0.22);
+
+  --rb-flow-max-width: 420px;
+
+  --rb-motion-fast: 120ms;
+  --rb-motion-base: 180ms;
+  --rb-motion-slow: 260ms;
+  --rb-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
   color-scheme: light;
-
-  --rb-color-cream: #f6efe1;
-  --rb-color-cream-soft: #fbf7ee;
-  --rb-color-paper: #fffaf0;
-  --rb-color-olive: #3f4b2c;
-  --rb-color-olive-deep: #26301d;
-  --rb-color-olive-muted: #697153;
-  --rb-color-brass: #b88a3d;
-  --rb-color-brass-deep: #8d6729;
-  --rb-color-line: rgba(63, 75, 44, 0.18);
-  --rb-color-shadow: rgba(38, 48, 29, 0.18);
-  --rb-color-error: #8b2e23;
-
-  --rb-font-serif: Georgia, "Times New Roman", serif;
-  --rb-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-
-  --rb-space-1: 0.25rem;
-  --rb-space-2: 0.5rem;
-  --rb-space-3: 0.75rem;
-  --rb-space-4: 1rem;
-  --rb-space-5: 1.25rem;
-  --rb-space-6: 1.5rem;
-  --rb-space-8: 2rem;
-  --rb-space-10: 2.5rem;
-
-  --rb-radius-sm: 0.375rem;
-  --rb-radius-md: 0.5rem;
-  --rb-radius-lg: 0.75rem;
-
-  --rb-max-flow: 28rem;
 }
