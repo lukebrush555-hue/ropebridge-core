@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>RopeBridge Claim</title>
+    <link rel="stylesheet" href="../../assets/css/ropebridge/tokens.css">
+    <link rel="stylesheet" href="../../assets/css/ropebridge/base.css">
+    <link rel="stylesheet" href="../../assets/css/ropebridge/components.css">
+    <link rel="stylesheet" href="../../assets/css/ropebridge/states.css">
+  </head>
+  <body>
+    <main class="rb-page">
+      <div class="rb-flow">
+        <section class="rb-state" data-state="connect" aria-labelledby="connect-title">
+          <img class="rb-seal" src="../../assets/images/ropebridge-seal.svg" alt="RopeBridge">
+          <h1 class="rb-title" id="connect-title">Connect once.</h1>
+          <p class="rb-description">So this table can remember you next time.</p>
+          <form class="rb-form" data-connect-form>
+            <label class="rb-field">
+              Name
+              <input class="rb-input" name="visitor_name" autocomplete="name" required>
+            </label>
+            <label class="rb-field">
+              Phone
+              <input class="rb-input" name="visitor_phone" autocomplete="tel" inputmode="tel" required>
+            </label>
+            <button class="rb-button" type="submit">Continue</button>
+          </form>
+        </section>
+
+        <section class="rb-state" data-state="claim" aria-labelledby="offer-title">
+          <img class="rb-seal" src="../../assets/images/ropebridge-seal.svg" alt="RopeBridge">
+          <p class="rb-recognition" data-recognition hidden></p>
+          <img class="rb-offer-image" data-offer-image alt="">
+          <h1 class="rb-title" id="offer-title" data-offer-title></h1>
+          <p class="rb-description" data-offer-description></p>
+          <form data-claim-form>
+            <button class="rb-button" type="submit" data-claim-button></button>
+            <p class="rb-error" data-claim-error role="status" aria-live="polite"></p>
+          </form>
+          <p class="rb-limit" data-limit-note></p>
+        </section>
+
+        <section class="rb-state rb-connected" data-state="connected" aria-labelledby="connected-title">
+          <img class="rb-seal" src="../../assets/images/ropebridge-seal.svg" alt="RopeBridge">
+          <h1 class="rb-title" id="connected-title">Connected.</h1>
+          <p class="rb-description">Your claim was received. This interaction is now remembered for next time.</p>
+        </section>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../configs/examples/claim-samplepass-demo.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

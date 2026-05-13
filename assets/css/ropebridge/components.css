@@ -1,0 +1,107 @@
+.rb-seal {
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: 0 auto var(--rb-space-5);
+}
+
+.rb-recognition {
+  margin: 0 0 var(--rb-space-4);
+  color: var(--rb-color-olive);
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.rb-offer-image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--rb-color-line);
+  border-radius: var(--rb-radius-lg);
+  box-shadow: 0 1.25rem 3rem var(--rb-color-shadow);
+  object-fit: cover;
+}
+
+.rb-title {
+  margin: var(--rb-space-6) 0 var(--rb-space-3);
+  color: var(--rb-color-olive-deep);
+  font-family: var(--rb-font-serif);
+  font-size: clamp(2.35rem, 12vw, 4.25rem);
+  font-weight: 500;
+  line-height: 0.92;
+}
+
+.rb-description {
+  margin: 0 auto var(--rb-space-6);
+  max-width: 24rem;
+  color: var(--rb-color-olive-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.rb-button {
+  display: inline-flex;
+  min-height: 3.25rem;
+  width: min(100%, 20rem);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rb-color-olive-deep);
+  border-radius: var(--rb-radius-md);
+  background: var(--rb-color-olive-deep);
+  color: var(--rb-color-paper);
+  font-weight: 750;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+.rb-button:hover,
+.rb-button:focus-visible {
+  background: var(--rb-color-olive);
+}
+
+.rb-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.rb-limit {
+  margin: var(--rb-space-4) 0 0;
+  color: var(--rb-color-brass-deep);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.rb-form {
+  display: grid;
+  gap: var(--rb-space-4);
+  margin-top: var(--rb-space-6);
+  text-align: left;
+}
+
+.rb-field {
+  display: grid;
+  gap: var(--rb-space-2);
+  color: var(--rb-color-olive);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.rb-input {
+  min-height: 3rem;
+  width: 100%;
+  border: 1px solid var(--rb-color-line);
+  border-radius: var(--rb-radius-md);
+  background: var(--rb-color-paper);
+  color: var(--rb-color-olive-deep);
+  padding: 0.75rem 0.9rem;
+}
+
+.rb-input:focus {
+  border-color: var(--rb-color-brass);
+  outline: 3px solid rgba(184, 138, 61, 0.22);
+}
+
+.rb-connected {
+  border: 1px solid var(--rb-color-line);
+  border-radius: var(--rb-radius-lg);
+  background: rgba(255, 250, 240, 0.74);
+  padding: var(--rb-space-8) var(--rb-space-5);
+}

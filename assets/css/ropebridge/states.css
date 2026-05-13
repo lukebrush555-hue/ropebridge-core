@@ -1,0 +1,30 @@
+.rb-state {
+  display: none;
+}
+
+.rb-state[data-active="true"] {
+  display: block;
+}
+
+.rb-error {
+  min-height: 1.25rem;
+  margin: var(--rb-space-3) 0 0;
+  color: var(--rb-color-error);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.rb-muted {
+  color: var(--rb-color-olive-muted);
+}
+
+@media (max-width: 420px) {
+  .rb-page {
+    padding: var(--rb-space-6) var(--rb-space-4);
+  }
+
+  .rb-seal {
+    width: 4.75rem;
+    height: 4.75rem;
+  }
+}
