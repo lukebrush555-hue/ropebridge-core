@@ -30,8 +30,8 @@ window.ROPEBRIDGE_CONFIG = {
     connectedNote: "Your details are saved for next time."
   },
   supabase: {
-    url: "YOUR_SUPABASE_URL",
-    publishableKey: "YOUR_SUPABASE_PUBLISHABLE_KEY"
+    url: "https://chqwqnxxggswbsijxnio.supabase.co",
+    publishableKey: "sb_publishable_KY_sTlKcppTc8dlDZjCqaA_2XV6COmP"
   },
   tracking: {
     qrId: "farmers-market-table-sign-001"
