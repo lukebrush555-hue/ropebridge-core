@@ -5,28 +5,32 @@
 }
 
 html {
-  min-height: 100%;
-  background: var(--rb-color-cream);
-  color: var(--rb-color-olive-deep);
+  background: var(--rb-bg);
+  color: var(--rb-text-primary);
   font-family: var(--rb-font-sans);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  min-height: 100vh;
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(255, 250, 240, 0.92), rgba(246, 239, 225, 0.98)),
-    var(--rb-color-cream);
-  color: var(--rb-color-olive-deep);
+    radial-gradient(circle at top left, rgba(187, 117, 29, 0.1), transparent 30rem),
+    var(--rb-bg);
+  color: var(--rb-text-primary);
+  font-family: var(--rb-font-sans);
+  font-size: 17px;
+  line-height: 1.5;
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 
-button {
-  cursor: pointer;
+a {
+  color: inherit;
 }
 
 img {
@@ -34,14 +38,94 @@ img {
   max-width: 100%;
 }
 
-.rb-page {
-  display: grid;
-  min-height: 100vh;
-  place-items: center;
-  padding: var(--rb-space-8) var(--rb-space-4);
+[hidden] {
+  display: none !important;
 }
 
-.rb-flow {
-  width: min(100%, var(--rb-max-flow));
-  text-align: center;
+.rb-flow-page {
+  width: 100%;
+  padding: 16px;
+}
+
+.rb-flow-shell {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.rb-screen-state {
+  display: none;
+}
+
+.rb-screen-state.is-active {
+  display: block;
+}
+
+.rb-logo-header {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 18px;
+}
+
+.rb-state-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rb-space-2);
+  margin-bottom: var(--rb-space-3);
+}
+
+.rb-eyebrow {
+  margin: 0 0 var(--rb-space-1);
+  color: var(--rb-accent-pressed);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rb-title {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.12;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.rb-body {
+  margin: var(--rb-space-1-5) 0 0;
+  color: var(--rb-text-secondary);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.rb-muted {
+  color: var(--rb-text-secondary);
+}
+
+@media (max-width: 480px) {
+  .rb-flow-page {
+    padding: 12px;
+  }
+
+  .rb-flow-shell {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .rb-flow-page {
+    padding: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
