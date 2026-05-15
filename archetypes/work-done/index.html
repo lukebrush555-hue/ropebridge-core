@@ -21,15 +21,15 @@
         <div><div class="summary-title" id="serviceType">Dryer Vent Cleaning</div><div class="meta-line"><span>⌖</span><span id="serviceAddress">123 Main St</span></div><div class="meta-line"><span>□</span><span id="completedOn">May 15, 2026</span></div></div>
       </article>
       <p class="note">Photos and service notes are ready.</p>
-      <section class="card record" aria-label="Service record actions">
-        <div class="section-title">Your service record</div>
-        <button class="row-button" id="emailRecord" type="button"><span class="row-icon">✉</span><span class="row-label">Email me this record</span><span class="chev">›</span></button>
+      <section class="card record" aria-label="Service proof actions">
+        <div class="section-title">Service proof</div>
+        <button class="row-button" id="sendServiceRecord" type="button"><span class="row-icon">✉</span><span class="row-label">Send service record</span><span class="chev">›</span></button>
         <div class="divider"></div>
-        <button class="row-button" id="downloadPdf" type="button"><span class="row-icon">▧</span><span class="row-label">Download PDF</span><span class="chev">›</span></button>
+        <button class="row-button" id="viewServicePhotos" type="button"><span class="row-icon">▧</span><span class="row-label">View service photos</span><span class="chev">›</span></button>
       </section>
       <section class="card payment" aria-label="Payment"><div><div class="eyebrow">Amount due</div><div class="price" id="amountDue">$185.00</div></div><button class="button primary" id="payNow" type="button">Pay now</button></section>
       <section class="card rebook" aria-label="Schedule next service"><div class="rebook-title" id="nextService">Recommended next service: May 2027</div><button class="button outline" id="scheduleNext" type="button">Schedule next service</button><div class="helper">We'll send you a reminder.</div></section>
-      <footer class="footer"><span>♢</span><span>Receipt and service report available after payment.</span></footer>
+      <footer class="footer"><span>♢</span><span>Stripe handles payment receipts. RopeBridge keeps the service record.</span></footer>
     </section>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -38,17 +38,17 @@
     const SUPABASE_PUBLISHABLE_KEY="sb_publishable_KY_sTlKcppTc8dlDZjCqaA_2XV6COmP";
     const ROPEBRIDGE_STRIPE_PAYMENT_URL="https://buy.stripe.com/3cI7sMbLk0Ck5uf1BKeIw00";
     const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-    const defaults={customer_id:"demo_customer_001",visit_id:"demo_visit_001",business_name:"Luke's Dryer Vent Service",service_type:"Dryer Vent Cleaning",service_address:"123 Main St",completed_on:"2026-05-15",completed_label:"May 15, 2026",amount_due:185,amount_label:"$185.00",next_service_label:"Recommended next service: May 2027",payment_url:ROPEBRIDGE_STRIPE_PAYMENT_URL,schedule_url:""};
+    const defaults={customer_id:"demo_customer_001",visit_id:"demo_visit_001",business_name:"Luke's Dryer Vent Service",service_type:"Dryer Vent Cleaning",service_address:"123 Main St",completed_on:"2026-05-15",completed_label:"May 15, 2026",amount_due:185,amount_label:"$185.00",next_service_label:"Recommended next service: May 2027",payment_url:ROPEBRIDGE_STRIPE_PAYMENT_URL,schedule_url:"",photos_url:"",record_url:""};
     const params=new URLSearchParams(window.location.search);
-    const config={customer_id:params.get("customer_id")||defaults.customer_id,visit_id:params.get("visit_id")||defaults.visit_id,business_name:params.get("business")||defaults.business_name,service_type:params.get("service")||defaults.service_type,service_address:params.get("address")||defaults.service_address,completed_on:params.get("completed_on")||defaults.completed_on,completed_label:params.get("completed_label")||defaults.completed_label,amount_due:Number(params.get("amount")||defaults.amount_due),amount_label:params.get("amount_label")||`$${Number(params.get("amount")||defaults.amount_due).toFixed(2)}`,next_service_label:params.get("next")||defaults.next_service_label,payment_url:params.get("payment_url")||defaults.payment_url,schedule_url:params.get("schedule_url")||defaults.schedule_url};
+    const config={customer_id:params.get("customer_id")||defaults.customer_id,visit_id:params.get("visit_id")||defaults.visit_id,business_name:params.get("business")||defaults.business_name,service_type:params.get("service")||defaults.service_type,service_address:params.get("address")||defaults.service_address,completed_on:params.get("completed_on")||defaults.completed_on,completed_label:params.get("completed_label")||defaults.completed_label,amount_due:Number(params.get("amount")||defaults.amount_due),amount_label:params.get("amount_label")||`$${Number(params.get("amount")||defaults.amount_due).toFixed(2)}`,next_service_label:params.get("next")||defaults.next_service_label,payment_url:params.get("payment_url")||defaults.payment_url,schedule_url:params.get("schedule_url")||defaults.schedule_url,photos_url:params.get("photos_url")||defaults.photos_url,record_url:params.get("record_url")||defaults.record_url};
     businessName.textContent=config.business_name;serviceType.textContent=config.service_type;serviceAddress.textContent=config.service_address;completedOn.textContent=config.completed_label;amountDue.textContent=config.amount_label;nextService.textContent=config.next_service_label;
     let toastTimer=null;function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),1800)}
     async function recordAction(action,extra={}){try{const{error}=await supabaseClient.from("work_done_events").insert({customer_id:config.customer_id,visit_id:config.visit_id,business_name:config.business_name,service_type:config.service_type,service_address:config.service_address,completed_on:config.completed_on,amount_due:config.amount_due,action,metadata:{page_path:location.pathname,query:Object.fromEntries(params.entries()),user_agent:navigator.userAgent,...extra}});if(error){console.warn("Supabase insert failed",error);return false}return true}catch(err){console.warn("Supabase unavailable",err);return false}}
     recordAction("page_view");
-    emailRecord.addEventListener("click",async()=>{await recordAction("email_record");showToast("Record email requested")});
-    downloadPdf.addEventListener("click",async()=>{await recordAction("download_pdf");showToast("PDF download requested")});
+    sendServiceRecord.addEventListener("click",async()=>{await recordAction("send_service_record",{destination:config.record_url});if(config.record_url){location.href=config.record_url}else{showToast("Service record request saved")}});
+    viewServicePhotos.addEventListener("click",async()=>{await recordAction("view_service_photos",{destination:config.photos_url});if(config.photos_url){location.href=config.photos_url}else{showToast("Photo view request saved")}});
     payNow.addEventListener("click",async()=>{await recordAction("pay_now",{destination:config.payment_url});location.href=config.payment_url});
-    scheduleNext.addEventListener("click",async()=>{await recordAction("schedule_next_service",{destination:config.schedule_url});if(config.schedule_url){location.href=config.schedule_url}else{showToast("Scheduling link not connected yet")}});
+    scheduleNext.addEventListener("click",async()=>{await recordAction("schedule_next_service",{destination:config.schedule_url});if(config.schedule_url){location.href=config.schedule_url}else{showToast("Scheduling request saved")}});
   </script>
 </body>
 </html>
