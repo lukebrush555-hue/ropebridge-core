@@ -3,283 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Work Done | QR Checkout</title>
-  <meta name="description" content="Customer-facing work completed page for proof, payment, and next-service scheduling." />
+  <title>Work Done | RopeBridge</title>
+  <meta name="description" content="Work completed page for proof, payment, and next-service scheduling." />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root {
-      --bg: #f5f5f4;
-      --page: #ffffff;
-      --ink: #0a0a0a;
-      --muted: #57534e;
-      --line: #e7e5e4;
-      --soft: #fafaf9;
-      --blue: #143cff;
-      --blue-dark: #0f2fd1;
-      --green: #166534;
-      --green-soft: #ecfdf3;
-      --sky-soft: #eff6ff;
-      --radius-xl: 24px;
-      --radius-lg: 18px;
-      --shadow: 0 22px 70px rgba(0,0,0,.10);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--ink);
-      display: flex;
-      justify-content: center;
-      padding: 14px;
-    }
-
-    .shell {
-      width: min(100%, 430px);
-      min-height: calc(100vh - 28px);
-      background: var(--page);
-      border: 1px solid var(--line);
-      border-radius: 32px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .page { padding: 30px 24px 26px; }
-
-    .business {
-      font-size: 15px;
-      color: var(--ink);
-      margin-bottom: 18px;
-      letter-spacing: .01em;
-    }
-
-    h1 {
-      margin: 0 0 20px;
-      font-size: clamp(42px, 12vw, 54px);
-      line-height: .96;
-      letter-spacing: -.055em;
-      font-weight: 720;
-    }
-
-    .complete {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      color: var(--green);
-      font-weight: 650;
-    }
-
-    .check {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      background: var(--green-soft);
-      font-size: 25px;
-      line-height: 1;
-    }
-
-    .card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      background: var(--page);
-      overflow: hidden;
-    }
-
-    .summary {
-      display: flex;
-      align-items: center;
-      gap: 17px;
-      padding: 20px;
-      margin-bottom: 17px;
-    }
-
-    .service-icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 999px;
-      background: var(--sky-soft);
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-    }
-
-    .dryer {
-      width: 34px;
-      height: 38px;
-      border: 2px solid #111827;
-      border-radius: 4px;
-      position: relative;
-    }
-
-    .dryer:before {
-      content: "";
-      position: absolute;
-      left: 8px;
-      top: 13px;
-      width: 14px;
-      height: 14px;
-      border: 2px solid #111827;
-      border-radius: 999px;
-    }
-
-    .dryer:after {
-      content: "≈\A≈";
-      white-space: pre;
-      position: absolute;
-      right: -22px;
-      top: 3px;
-      color: #111827;
-      font-size: 20px;
-      line-height: 18px;
-      font-weight: 500;
-    }
-
-    .summary-title {
-      font-size: 18px;
-      font-weight: 720;
-      margin-bottom: 9px;
-      letter-spacing: -.01em;
-    }
-
-    .meta-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-    }
-
-    .note {
-      color: var(--muted);
-      font-size: 16px;
-      margin: 0 0 16px;
-    }
-
-    .record { margin-bottom: 16px; }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 720;
-      padding: 18px 20px 8px;
-    }
-
-    .row-button {
-      appearance: none;
-      border: 0;
-      background: transparent;
-      width: 100%;
-      min-height: 58px;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      color: var(--ink);
-      text-align: left;
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .row-button:hover { background: var(--soft); }
-    .row-button:active { transform: translateY(1px); }
-
-    .row-label { flex: 1; font-size: 16px; }
-    .row-icon, .chev { width: 22px; text-align: center; color: var(--ink); }
-    .divider { height: 1px; background: var(--line); margin-left: 56px; }
-
-    .payment {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-
-    .eyebrow { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
-    .price { font-size: 39px; line-height: 1; letter-spacing: -.055em; font-weight: 720; }
-
-    .button {
-      border: 1px solid transparent;
-      border-radius: 13px;
-      min-height: 56px;
-      padding: 0 24px;
-      font: inherit;
-      font-size: 16px;
-      font-weight: 680;
-      cursor: pointer;
-      transition: background .15s ease, border-color .15s ease, transform .05s ease;
-    }
-
-    .button:active { transform: translateY(1px); }
-    .primary { background: var(--blue); color: white; }
-    .primary:hover { background: var(--blue-dark); }
-    .outline { background: white; color: var(--blue); border-color: var(--blue); width: 100%; }
-    .outline:hover { background: #f8faff; border-color: var(--blue-dark); color: var(--blue-dark); }
-
-    .rebook {
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-
-    .rebook-title {
-      font-size: 18px;
-      font-weight: 720;
-      margin-bottom: 15px;
-      letter-spacing: -.012em;
-    }
-
-    .helper { color: var(--muted); font-size: 14px; margin-top: 12px; }
-
-    .footer {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 10px;
-      color: #78716c;
-      font-size: 14px;
-      line-height: 1.35;
-      padding: 0 24px;
-      text-align: left;
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: #111827;
-      color: white;
-      padding: 11px 15px;
-      border-radius: 999px;
-      font-size: 14px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease, transform .2s ease;
-      box-shadow: 0 8px 30px rgba(0,0,0,.18);
-      max-width: calc(100vw - 28px);
-      white-space: nowrap;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(-4px);
-    }
-
-    @media (max-width: 380px) {
-      body { padding: 0; background: white; }
-      .shell { min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
-      .page { padding: 24px 18px; }
-      .summary, .payment, .rebook { padding: 16px; }
-      .price { font-size: 34px; }
-      .button { padding: 0 18px; }
-    }
+    :root{--bg:#f5f5f4;--page:#fff;--ink:#0a0a0a;--muted:#57534e;--line:#e7e5e4;--soft:#fafaf9;--blue:#143cff;--blue2:#0f2fd1;--green:#166534;--greenSoft:#ecfdf3;--sky:#eff6ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);display:flex;justify-content:center;padding:14px}.shell{width:min(100%,430px);min-height:calc(100vh - 28px);background:var(--page);border:1px solid var(--line);border-radius:32px;box-shadow:0 22px 70px rgba(0,0,0,.1);overflow:hidden}.page{padding:30px 24px 26px}.business{font-size:15px;margin-bottom:18px}h1{margin:0 0 20px;font-size:clamp(42px,12vw,54px);line-height:.96;letter-spacing:-.055em;font-weight:720}.complete{display:flex;align-items:center;gap:12px;margin-bottom:18px;color:var(--green);font-weight:650}.check{width:44px;height:44px;border-radius:999px;display:grid;place-items:center;background:var(--greenSoft);font-size:25px}.card{border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden}.summary{display:flex;align-items:center;gap:17px;padding:20px;margin-bottom:17px}.service-icon{width:64px;height:64px;border-radius:999px;background:var(--sky);display:grid;place-items:center;flex:0 0 auto}.dryer{width:34px;height:38px;border:2px solid #111827;border-radius:4px;position:relative}.dryer:before{content:"";position:absolute;left:8px;top:13px;width:14px;height:14px;border:2px solid #111827;border-radius:999px}.dryer:after{content:"≈\A≈";white-space:pre;position:absolute;right:-22px;top:3px;color:#111827;font-size:20px;line-height:18px}.summary-title{font-size:18px;font-weight:720;margin-bottom:9px}.meta-line{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:16px;line-height:1.55}.note{color:var(--muted);font-size:16px;margin:0 0 16px}.record,.payment{margin-bottom:16px}.section-title{font-size:16px;font-weight:720;padding:18px 20px 8px}.row-button{appearance:none;border:0;background:transparent;width:100%;min-height:58px;padding:0 20px;display:flex;align-items:center;gap:14px;color:var(--ink);text-align:left;font:inherit;cursor:pointer}.row-button:hover{background:var(--soft)}.row-label{flex:1;font-size:16px}.row-icon,.chev{width:22px;text-align:center}.divider{height:1px;background:var(--line);margin-left:56px}.payment{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px}.eyebrow{font-size:15px;font-weight:700;margin-bottom:5px}.price{font-size:39px;line-height:1;letter-spacing:-.055em;font-weight:720}.button{border:1px solid transparent;border-radius:13px;min-height:56px;padding:0 24px;font:inherit;font-size:16px;font-weight:680;cursor:pointer}.primary{background:var(--blue);color:#fff}.primary:hover{background:var(--blue2)}.outline{background:#fff;color:var(--blue);border-color:var(--blue);width:100%}.rebook{padding:20px;margin-bottom:24px}.rebook-title{font-size:18px;font-weight:720;margin-bottom:15px}.helper{color:var(--muted);font-size:14px;margin-top:12px}.footer{display:flex;justify-content:center;align-items:flex-start;gap:10px;color:#78716c;font-size:14px;line-height:1.35;padding:0 24px}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#111827;color:#fff;padding:11px 15px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.2s;box-shadow:0 8px 30px rgba(0,0,0,.18);max-width:calc(100vw - 28px);white-space:nowrap}.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}@media(max-width:380px){body{padding:0;background:#fff}.shell{min-height:100vh;border:0;border-radius:0;box-shadow:none}.page{padding:24px 18px}.summary,.payment,.rebook{padding:16px}.price{font-size:34px}.button{padding:0 18px}}
   </style>
 </head>
 <body>
@@ -287,172 +15,40 @@
     <section class="page">
       <div class="business" id="businessName">Luke's Dryer Vent Service</div>
       <h1>Work Done</h1>
-
-      <div class="complete">
-        <div class="check" aria-hidden="true">✓</div>
-        <div>Completed today</div>
-      </div>
-
+      <div class="complete"><div class="check" aria-hidden="true">✓</div><div>Completed today</div></div>
       <article class="card summary">
         <div class="service-icon" aria-hidden="true"><div class="dryer"></div></div>
-        <div>
-          <div class="summary-title" id="serviceType">Dryer Vent Cleaning</div>
-          <div class="meta-line"><span aria-hidden="true">⌖</span><span id="serviceAddress">123 Main St</span></div>
-          <div class="meta-line"><span aria-hidden="true">□</span><span id="completedOn">May 15, 2026</span></div>
-        </div>
+        <div><div class="summary-title" id="serviceType">Dryer Vent Cleaning</div><div class="meta-line"><span>⌖</span><span id="serviceAddress">123 Main St</span></div><div class="meta-line"><span>□</span><span id="completedOn">May 15, 2026</span></div></div>
       </article>
-
       <p class="note">Photos and service notes are ready.</p>
-
       <section class="card record" aria-label="Service record actions">
         <div class="section-title">Your service record</div>
-        <button class="row-button" id="emailRecord" type="button">
-          <span class="row-icon" aria-hidden="true">✉</span>
-          <span class="row-label">Email me this record</span>
-          <span class="chev" aria-hidden="true">›</span>
-        </button>
+        <button class="row-button" id="emailRecord" type="button"><span class="row-icon">✉</span><span class="row-label">Email me this record</span><span class="chev">›</span></button>
         <div class="divider"></div>
-        <button class="row-button" id="downloadPdf" type="button">
-          <span class="row-icon" aria-hidden="true">▧</span>
-          <span class="row-label">Download PDF</span>
-          <span class="chev" aria-hidden="true">›</span>
-        </button>
+        <button class="row-button" id="downloadPdf" type="button"><span class="row-icon">▧</span><span class="row-label">Download PDF</span><span class="chev">›</span></button>
       </section>
-
-      <section class="card payment" aria-label="Payment">
-        <div>
-          <div class="eyebrow">Amount due</div>
-          <div class="price" id="amountDue">$185.00</div>
-        </div>
-        <button class="button primary" id="payNow" type="button">Pay now</button>
-      </section>
-
-      <section class="card rebook" aria-label="Schedule next service">
-        <div class="rebook-title" id="nextService">Recommended next service: May 2027</div>
-        <button class="button outline" id="scheduleNext" type="button">Schedule next service</button>
-        <div class="helper">We'll send you a reminder.</div>
-      </section>
-
-      <footer class="footer">
-        <span aria-hidden="true">♢</span>
-        <span>Receipt and service report available after payment.</span>
-      </footer>
+      <section class="card payment" aria-label="Payment"><div><div class="eyebrow">Amount due</div><div class="price" id="amountDue">$185.00</div></div><button class="button primary" id="payNow" type="button">Pay now</button></section>
+      <section class="card rebook" aria-label="Schedule next service"><div class="rebook-title" id="nextService">Recommended next service: May 2027</div><button class="button outline" id="scheduleNext" type="button">Schedule next service</button><div class="helper">We'll send you a reminder.</div></section>
+      <footer class="footer"><span>♢</span><span>Receipt and service report available after payment.</span></footer>
     </section>
   </main>
-
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
   <script>
-    const SUPABASE_URL = "https://chqwqnxxggswbsijxnio.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_KY_sTlKcppTc8dlDZjCqaA_2XV6COmP";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-    const defaults = {
-      customer_id: "demo_customer_001",
-      visit_id: "demo_visit_001",
-      business_name: "Luke's Dryer Vent Service",
-      service_type: "Dryer Vent Cleaning",
-      service_address: "123 Main St",
-      completed_on: "2026-05-15",
-      completed_label: "May 15, 2026",
-      amount_due: 185.00,
-      amount_label: "$185.00",
-      next_service_label: "Recommended next service: May 2027",
-      payment_url: "",
-      schedule_url: ""
-    };
-
-    const params = new URLSearchParams(window.location.search);
-    const config = {
-      customer_id: params.get("customer_id") || defaults.customer_id,
-      visit_id: params.get("visit_id") || defaults.visit_id,
-      business_name: params.get("business") || defaults.business_name,
-      service_type: params.get("service") || defaults.service_type,
-      service_address: params.get("address") || defaults.service_address,
-      completed_on: params.get("completed_on") || defaults.completed_on,
-      completed_label: params.get("completed_label") || defaults.completed_label,
-      amount_due: Number(params.get("amount") || defaults.amount_due),
-      amount_label: params.get("amount_label") || `$${Number(params.get("amount") || defaults.amount_due).toFixed(2)}`,
-      next_service_label: params.get("next") || defaults.next_service_label,
-      payment_url: params.get("payment_url") || defaults.payment_url,
-      schedule_url: params.get("schedule_url") || defaults.schedule_url
-    };
-
-    document.getElementById("businessName").textContent = config.business_name;
-    document.getElementById("serviceType").textContent = config.service_type;
-    document.getElementById("serviceAddress").textContent = config.service_address;
-    document.getElementById("completedOn").textContent = config.completed_label;
-    document.getElementById("amountDue").textContent = config.amount_label;
-    document.getElementById("nextService").textContent = config.next_service_label;
-
-    let toastTimer = null;
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
-    }
-
-    async function recordAction(action, extra = {}) {
-      try {
-        const { error } = await supabaseClient.from("work_done_events").insert({
-          customer_id: config.customer_id,
-          visit_id: config.visit_id,
-          business_name: config.business_name,
-          service_type: config.service_type,
-          service_address: config.service_address,
-          completed_on: config.completed_on,
-          amount_due: config.amount_due,
-          action,
-          metadata: {
-            page_path: window.location.pathname,
-            query: Object.fromEntries(params.entries()),
-            user_agent: navigator.userAgent,
-            ...extra
-          }
-        });
-
-        if (error) {
-          console.warn("Supabase insert failed", error);
-          return false;
-        }
-        return true;
-      } catch (err) {
-        console.warn("Supabase unavailable", err);
-        return false;
-      }
-    }
-
+    const SUPABASE_URL="https://chqwqnxxggswbsijxnio.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY="sb_publishable_KY_sTlKcppTc8dlDZjCqaA_2XV6COmP";
+    const ROPEBRIDGE_STRIPE_PAYMENT_URL="https://buy.stripe.com/3cI7sMbLk0Ck5uf1BKeIw00";
+    const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    const defaults={customer_id:"demo_customer_001",visit_id:"demo_visit_001",business_name:"Luke's Dryer Vent Service",service_type:"Dryer Vent Cleaning",service_address:"123 Main St",completed_on:"2026-05-15",completed_label:"May 15, 2026",amount_due:185,amount_label:"$185.00",next_service_label:"Recommended next service: May 2027",payment_url:ROPEBRIDGE_STRIPE_PAYMENT_URL,schedule_url:""};
+    const params=new URLSearchParams(window.location.search);
+    const config={customer_id:params.get("customer_id")||defaults.customer_id,visit_id:params.get("visit_id")||defaults.visit_id,business_name:params.get("business")||defaults.business_name,service_type:params.get("service")||defaults.service_type,service_address:params.get("address")||defaults.service_address,completed_on:params.get("completed_on")||defaults.completed_on,completed_label:params.get("completed_label")||defaults.completed_label,amount_due:Number(params.get("amount")||defaults.amount_due),amount_label:params.get("amount_label")||`$${Number(params.get("amount")||defaults.amount_due).toFixed(2)}`,next_service_label:params.get("next")||defaults.next_service_label,payment_url:params.get("payment_url")||defaults.payment_url,schedule_url:params.get("schedule_url")||defaults.schedule_url};
+    businessName.textContent=config.business_name;serviceType.textContent=config.service_type;serviceAddress.textContent=config.service_address;completedOn.textContent=config.completed_label;amountDue.textContent=config.amount_label;nextService.textContent=config.next_service_label;
+    let toastTimer=null;function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),1800)}
+    async function recordAction(action,extra={}){try{const{error}=await supabaseClient.from("work_done_events").insert({customer_id:config.customer_id,visit_id:config.visit_id,business_name:config.business_name,service_type:config.service_type,service_address:config.service_address,completed_on:config.completed_on,amount_due:config.amount_due,action,metadata:{page_path:location.pathname,query:Object.fromEntries(params.entries()),user_agent:navigator.userAgent,...extra}});if(error){console.warn("Supabase insert failed",error);return false}return true}catch(err){console.warn("Supabase unavailable",err);return false}}
     recordAction("page_view");
-
-    document.getElementById("emailRecord").addEventListener("click", async () => {
-      await recordAction("email_record");
-      showToast("Record email requested");
-    });
-
-    document.getElementById("downloadPdf").addEventListener("click", async () => {
-      await recordAction("download_pdf");
-      showToast("PDF download requested");
-    });
-
-    document.getElementById("payNow").addEventListener("click", async () => {
-      await recordAction("pay_now");
-      if (config.payment_url) {
-        window.location.href = config.payment_url;
-      } else {
-        showToast("Payment link not connected yet");
-      }
-    });
-
-    document.getElementById("scheduleNext").addEventListener("click", async () => {
-      await recordAction("schedule_next_service");
-      if (config.schedule_url) {
-        window.location.href = config.schedule_url;
-      } else {
-        showToast("Scheduling link not connected yet");
-      }
-    });
+    emailRecord.addEventListener("click",async()=>{await recordAction("email_record");showToast("Record email requested")});
+    downloadPdf.addEventListener("click",async()=>{await recordAction("download_pdf");showToast("PDF download requested")});
+    payNow.addEventListener("click",async()=>{await recordAction("pay_now",{destination:config.payment_url});location.href=config.payment_url});
+    scheduleNext.addEventListener("click",async()=>{await recordAction("schedule_next_service",{destination:config.schedule_url});if(config.schedule_url){location.href=config.schedule_url}else{showToast("Scheduling link not connected yet")}});
   </script>
 </body>
 </html>
