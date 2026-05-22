@@ -5,7 +5,7 @@
     phone: "ropebridge-phone"
   };
 
-  const config = window.ROPEBRIDGE_CONFIG || {};
+  const config = applyUrlConfig(window.ROPEBRIDGE_CONFIG || {});
   const copy = config.copy || {};
   const vendor = config.vendor || {};
   const offer = config.offer || {};
@@ -200,6 +200,39 @@
         link.remove();
       }
     });
+  }
+
+  function applyUrlConfig(baseConfig) {
+    const params = new URLSearchParams(window.location.search);
+
+    if (!Array.from(params.keys()).length) {
+      return baseConfig;
+    }
+
+    const nextConfig = Object.assign({}, baseConfig);
+    const nextVendor = Object.assign({}, baseConfig.vendor || {});
+    const nextOffer = Object.assign({}, baseConfig.offer || {});
+    const nextTracking = Object.assign({}, baseConfig.tracking || {});
+
+    if (params.get("vendor")) nextVendor.name = params.get("vendor");
+    if (params.get("vendor_id")) nextVendor.id = params.get("vendor_id");
+    if (params.get("category")) nextVendor.category = params.get("category");
+
+    if (params.get("title")) nextOffer.title = params.get("title");
+    if (params.get("description")) nextOffer.description = params.get("description");
+    if (params.get("cta")) nextOffer.cta = params.get("cta");
+    if (params.get("limit")) nextOffer.limitNote = params.get("limit");
+    if (params.get("image")) nextOffer.image = params.get("image");
+    if (params.get("image_alt")) nextOffer.imageAlt = params.get("image_alt");
+
+    if (params.get("campaign")) nextConfig.campaignId = params.get("campaign");
+    if (params.get("qr")) nextTracking.qrId = params.get("qr");
+
+    nextConfig.vendor = nextVendor;
+    nextConfig.offer = nextOffer;
+    nextConfig.tracking = nextTracking;
+
+    return nextConfig;
   }
 
   async function submitInteraction() {
