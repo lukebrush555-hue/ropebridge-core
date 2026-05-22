@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Image arriving soon placeholder</title>
+  <desc id="desc">A cream and olive RopeBridge placeholder that says the vendor image is arriving shortly.</desc>
+  <rect width="1200" height="900" fill="#fff6e8"/>
+  <rect x="54" y="54" width="1092" height="792" rx="52" fill="#fbf0dc" stroke="#6b7350" stroke-width="8" stroke-opacity="0.28"/>
+  <circle cx="600" cy="315" r="82" fill="#6b7350" fill-opacity="0.16"/>
+  <path d="M548 332c28-44 52-66 72-66 18 0 35 15 50 44l82 148H448l100-126Z" fill="#6b7350" fill-opacity="0.34"/>
+  <circle cx="501" cy="270" r="34" fill="#b08a4a" fill-opacity="0.45"/>
+  <text x="600" y="555" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" fill="#2f3d24">Your image is arriving shortly</text>
+  <text x="600" y="626" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" fill="#5f604f">The sample page is ready. We’ll add the final product photo here.</text>
+  <text x="600" y="711" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="8" fill="#9c7a3f">ROPEBRIDGE CLAIM</text>
+</svg>
