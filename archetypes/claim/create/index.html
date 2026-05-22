@@ -63,14 +63,11 @@
       .rb-output-card {
         margin-top: 18px;
         padding: 18px;
+        text-align: center;
       }
 
       .rb-output-link {
-        display: block;
-        overflow-wrap: anywhere;
-        color: var(--rb-text-primary);
-        font-size: 13px;
-        line-height: 1.45;
+        display: none;
       }
 
       .rb-qr-box {
@@ -123,15 +120,15 @@
                 <input id="vendor-category" value="Raw Honey" />
               </div>
               <div class="rb-create-field">
-                <label for="image-url">Image URL</label>
-                <input id="image-url" value="../../../assets/images/samplepass-stand.jpg" />
+                <label for="image-upload">Upload image</label>
+                <input id="image-upload" type="file" accept="image/*" />
               </div>
             </div>
           </section>
 
           <section class="rb-card rb-output-card" aria-labelledby="output-title">
-            <p id="output-title" class="rb-section-label">Instant vendor link</p>
-            <a id="preview-link" class="rb-output-link" href="#" target="_blank" rel="noreferrer"></a>
+            <p id="output-title" class="rb-section-label">Scan to preview</p>
+            <a id="preview-link" class="rb-output-link" href="#" target="_blank" rel="noreferrer">Preview link</a>
             <div id="qr-code" class="rb-qr-box" aria-label="QR code for generated claim page"></div>
             <button id="copy-link" class="rb-button rb-small-button" type="button">Copy link</button>
             <p id="copy-status" class="rb-status" role="status" aria-live="polite"></p>
