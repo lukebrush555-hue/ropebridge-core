@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Create RopeBridge Claim</title>
+    <link rel="stylesheet" href="../../../assets/css/ropebridge/tokens.css" />
+    <link rel="stylesheet" href="../../../assets/css/ropebridge/base.css" />
+    <link rel="stylesheet" href="../../../assets/css/ropebridge/components.css" />
+    <link rel="stylesheet" href="../../../assets/css/ropebridge/states.css" />
+    <style>
+      .rb-create-note {
+        margin: 0 0 18px;
+        color: rgba(63,63,59,0.62);
+        font-size: 14px;
+        line-height: 1.45;
+        text-align: center;
+      }
+
+      .rb-editable {
+        border-radius: 10px;
+        cursor: text;
+        outline: 1px dashed rgba(95,112,68,0.28);
+        outline-offset: 5px;
+      }
+
+      .rb-editable:focus {
+        outline: 2px solid rgba(95,112,68,0.62);
+        background: rgba(255,250,242,0.72);
+      }
+
+      .rb-create-tools {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .rb-create-field {
+        display: grid;
+        gap: 7px;
+      }
+
+      .rb-create-field label {
+        color: rgba(20,36,22,0.68);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .rb-create-field input {
+        width: 100%;
+        min-height: 46px;
+        border: 1px solid rgba(20,36,22,0.14);
+        border-radius: 14px;
+        background: rgba(255,250,242,0.82);
+        color: var(--rb-text-primary);
+        padding: 10px 12px;
+        font-size: 15px;
+      }
+
+      .rb-output-card {
+        margin-top: 18px;
+        padding: 18px;
+      }
+
+      .rb-output-link {
+        display: block;
+        overflow-wrap: anywhere;
+        color: var(--rb-text-primary);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .rb-qr-box {
+        display: grid;
+        place-items: center;
+        margin: 14px auto 0;
+        padding: 14px;
+        width: min(100%, 240px);
+        border-radius: 18px;
+        background: #fff;
+      }
+
+      .rb-small-button {
+        min-height: 48px;
+        border-radius: 15px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="rb-flow-page">
+      <div class="rb-flow-shell">
+        <header class="rb-logo-header">
+          <div class="rb-seal" aria-hidden="true"></div>
+        </header>
+
+        <p class="rb-create-note">Tap the sample page text and fill in the blanks. The preview link and QR update immediately.</p>
+
+        <section class="rb-screen-state is-active" aria-labelledby="offer-title">
+          <section class="rb-card rb-flow-card rb-offer-card">
+            <div class="rb-image-container">
+              <img id="offer-image" src="../../../assets/images/samplepass-stand.jpg" alt="Sample product preview" />
+            </div>
+
+            <div class="rb-offer-copy">
+              <h1 id="offer-title" class="rb-offer-title rb-editable" contenteditable="true" data-field="title">Wildflower Raw Honey</h1>
+              <p class="rb-offer-description rb-editable" contenteditable="true" data-field="description">Made locally in small seasonal batches using wildflower nectar gathered throughout the Saucon Valley region.</p>
+            </div>
+
+            <button id="cta-preview" class="rb-button rb-editable" type="button" contenteditable="true" data-field="cta">Claim sample</button>
+            <p class="rb-limit-note rb-editable" contenteditable="true" data-field="limitNote">One claim per person, per day.</p>
+
+            <div class="rb-create-tools" aria-label="Vendor details">
+              <div class="rb-create-field">
+                <label for="vendor-name">Business name</label>
+                <input id="vendor-name" value="Backyard Blooms" />
+              </div>
+              <div class="rb-create-field">
+                <label for="vendor-category">Category</label>
+                <input id="vendor-category" value="Raw Honey" />
+              </div>
+              <div class="rb-create-field">
+                <label for="image-url">Image URL</label>
+                <input id="image-url" value="../../../assets/images/samplepass-stand.jpg" />
+              </div>
+            </div>
+          </section>
+
+          <section class="rb-card rb-output-card" aria-labelledby="output-title">
+            <p id="output-title" class="rb-section-label">Instant vendor link</p>
+            <a id="preview-link" class="rb-output-link" href="#" target="_blank" rel="noreferrer"></a>
+            <div id="qr-code" class="rb-qr-box" aria-label="QR code for generated claim page"></div>
+            <button id="copy-link" class="rb-button rb-small-button" type="button">Copy link</button>
+            <p id="copy-status" class="rb-status" role="status" aria-live="polite"></p>
+          </section>
+
+          <p class="rb-powered-by">powered by RopeBridge</p>
+        </section>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="./create.js"></script>
+  </body>
+</html>
