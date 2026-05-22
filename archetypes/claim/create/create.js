@@ -2,12 +2,13 @@
   const editable = document.querySelectorAll('[data-field]');
   const vendorName = document.querySelector('#vendor-name');
   const vendorCategory = document.querySelector('#vendor-category');
-  const imageUrl = document.querySelector('#image-url');
+  const imageUpload = document.querySelector('#image-upload');
   const image = document.querySelector('#offer-image');
   const previewLink = document.querySelector('#preview-link');
   const qrCode = document.querySelector('#qr-code');
   const copyButton = document.querySelector('#copy-link');
   const copyStatus = document.querySelector('#copy-status');
+  const defaultImage = '../../../assets/images/samplepass-stand.jpg';
 
   function text(node) {
     return String(node && ('value' in node ? node.value : node.textContent) || '').replace(/\s+/g, ' ').trim();
@@ -36,7 +37,7 @@
     url.searchParams.set('description', field('description') || 'A local sample from this vendor.');
     url.searchParams.set('cta', field('cta') || 'Claim sample');
     url.searchParams.set('limit', field('limitNote') || 'One claim per person, per day.');
-    url.searchParams.set('image', text(imageUrl) || '../../../assets/images/samplepass-stand.jpg');
+    url.searchParams.set('image', defaultImage);
     url.searchParams.set('campaign', vendorId + '-sample');
     url.searchParams.set('qr', vendorId + '-instant-qr');
 
@@ -45,18 +46,14 @@
 
   function update() {
     const link = claimUrl();
-    const nextImage = text(imageUrl);
-
-    if (nextImage) image.src = nextImage;
 
     previewLink.href = link;
-    previewLink.textContent = link;
     qrCode.innerHTML = '';
 
     if (window.QRCode) {
       new QRCode(qrCode, { text: link, width: 196, height: 196 });
     } else {
-      qrCode.textContent = 'QR unavailable. Use the link above.';
+      qrCode.textContent = 'QR unavailable. Use the copied link instead.';
     }
   }
 
@@ -64,8 +61,19 @@
     node.addEventListener('input', update);
   });
 
-  [vendorName, vendorCategory, imageUrl].forEach(function (node) {
+  [vendorName, vendorCategory].forEach(function (node) {
     node.addEventListener('input', update);
+  });
+
+  imageUpload.addEventListener('change', function () {
+    const file = imageUpload.files && imageUpload.files[0];
+
+    if (!file) return;
+
+    image.src = URL.createObjectURL(file);
+    image.alt = (text(vendorName) || 'Vendor') + ' sample preview';
+    copyStatus.textContent = 'Image preview updated. The scanned link will use the default public image until image storage is added.';
+    copyStatus.className = 'rb-status';
   });
 
   copyButton.addEventListener('click', function () {
@@ -73,7 +81,7 @@
       copyStatus.textContent = 'Link copied.';
       copyStatus.className = 'rb-status is-success';
     }).catch(function () {
-      copyStatus.textContent = 'Copy failed. Press and hold the link to copy.';
+      copyStatus.textContent = 'Copy failed. Press and hold the button area to copy from browser tools.';
       copyStatus.className = 'rb-status is-error';
     });
   });
