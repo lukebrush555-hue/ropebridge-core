@@ -8,7 +8,7 @@
   const qrCode = document.querySelector('#qr-code');
   const copyButton = document.querySelector('#copy-link');
   const copyStatus = document.querySelector('#copy-status');
-  const defaultImage = '../../../assets/images/samplepass-stand.jpg';
+  const defaultImage = '../../assets/images/claim-image-arriving-soon.svg';
 
   function text(node) {
     return String(node && ('value' in node ? node.value : node.textContent) || '').replace(/\s+/g, ' ').trim();
@@ -38,6 +38,7 @@
     url.searchParams.set('cta', field('cta') || 'Claim sample');
     url.searchParams.set('limit', field('limitNote') || 'One claim per person, per day.');
     url.searchParams.set('image', defaultImage);
+    url.searchParams.set('image_alt', 'Your image is arriving shortly');
     url.searchParams.set('campaign', vendorId + '-sample');
     url.searchParams.set('qr', vendorId + '-instant-qr');
 
@@ -72,7 +73,7 @@
 
     image.src = URL.createObjectURL(file);
     image.alt = (text(vendorName) || 'Vendor') + ' sample preview';
-    copyStatus.textContent = 'Image preview updated. The scanned link will use the default public image until image storage is added.';
+    copyStatus.textContent = 'Image preview updated. The scanned link will show the arriving-soon placeholder until image storage is added.';
     copyStatus.className = 'rb-status';
   });
 
