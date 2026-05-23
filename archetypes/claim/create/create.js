@@ -27,46 +27,24 @@
     return String(node && ('value' in node ? node.value : node.textContent) || '').replace(/\s+/g, ' ').trim();
   }
 
+  function placeholder(node) {
+    return String(node && node.dataset && node.dataset.placeholder || '').trim();
+  }
+
+  function valueOrPlaceholder(node, fallback) {
+    return text(node) || placeholder(node) || fallback;
+  }
+
   function slug(value) {
     return String(value || 'vendor').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'vendor';
   }
 
-  function field(name) {
-    return text(document.querySelector('[data-field="' + name + '"]'));
+  function fieldNode(name) {
+    return document.querySelector('[data-field="' + name + '"]');
   }
 
-  function selectElementText(element) {
-    if (!element || !document.createRange || !window.getSelection) return;
-
-    const range = document.createRange();
-    range.selectNodeContents(element);
-
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
-
-  function installReplaceOnFirstType(element) {
-    if (!element) return;
-
-    element.dataset.selectOnFocus = 'true';
-
-    element.addEventListener('focus', function () {
-      if (element.dataset.selectOnFocus !== 'true') return;
-      window.setTimeout(function () {
-        selectElementText(element);
-      }, 0);
-    });
-
-    element.addEventListener('pointerup', function (event) {
-      if (element.dataset.selectOnFocus !== 'true') return;
-      event.preventDefault();
-      selectElementText(element);
-    });
-
-    element.addEventListener('input', function () {
-      element.dataset.selectOnFocus = 'false';
-    }, { once: true });
+  function field(name, fallback) {
+    return valueOrPlaceholder(fieldNode(name), fallback);
   }
 
   function claimUrl() {
@@ -74,18 +52,18 @@
     url.pathname = url.pathname.replace('/create/', '/');
     url.search = '';
 
-    const vendor = text(vendorName) || 'Sample Vendor';
+    const vendor = valueOrPlaceholder(vendorName, 'Sample Vendor');
     const vendorId = slug(vendor);
     const imageUrl = uploadedImageUrl || defaultImage;
-    const imageAlt = uploadedImageAlt || 'Your image is arriving shortly';
+    const imageAlt = uploadedImageAlt || vendor + ' sample preview';
 
     url.searchParams.set('vendor', vendor);
     url.searchParams.set('vendor_id', vendorId);
     url.searchParams.set('category', 'Free Sample');
-    url.searchParams.set('title', field('title') || 'Free Sample');
-    url.searchParams.set('description', field('description') || 'A local sample from this vendor.');
-    url.searchParams.set('cta', field('cta') || 'Claim sample');
-    url.searchParams.set('limit', field('limitNote') || 'One claim per person, per day.');
+    url.searchParams.set('title', field('title', 'Free Sample'));
+    url.searchParams.set('description', field('description', 'A local sample from this vendor.'));
+    url.searchParams.set('cta', field('cta', 'Claim sample'));
+    url.searchParams.set('limit', field('limitNote', 'One claim per person, per day.'));
     url.searchParams.set('image', imageUrl);
     url.searchParams.set('image_alt', imageAlt);
     url.searchParams.set('campaign', vendorId + '-sample');
@@ -160,7 +138,7 @@
   async function uploadImage(file) {
     validateImage(file);
 
-    const vendorId = slug(text(vendorName));
+    const vendorId = slug(valueOrPlaceholder(vendorName, 'vendor'));
     const fileName = vendorId + '-' + Date.now() + '.' + extensionFor(file);
     const objectPath = vendorId + '/' + fileName;
     const uploadEndpoint = storageConfig.url.replace(/\/$/, '') + '/storage/v1/object/' + storageBucket + '/' + encodeURI(objectPath);
@@ -200,7 +178,7 @@
       throw new Error('QR code is not ready yet.');
     }
 
-    const vendorId = slug(text(vendorName));
+    const vendorId = slug(valueOrPlaceholder(vendorName, 'vendor'));
     const downloadLink = document.createElement('a');
     downloadLink.href = dataUrl;
     downloadLink.download = vendorId + '-ropebridge-qr.png';
@@ -231,11 +209,9 @@
   }
 
   editable.forEach(function (node) {
-    installReplaceOnFirstType(node);
     node.addEventListener('input', update);
   });
 
-  installReplaceOnFirstType(vendorName);
   vendorName.addEventListener('input', update);
   previewToggle.addEventListener('click', toggleInlinePreview);
 
@@ -249,7 +225,7 @@
     if (!file) return;
 
     uploadedImageUrl = '';
-    uploadedImageAlt = (text(vendorName) || 'Vendor') + ' sample preview';
+    uploadedImageAlt = valueOrPlaceholder(vendorName, 'Vendor') + ' sample preview';
     image.src = URL.createObjectURL(file);
     image.alt = uploadedImageAlt;
     copyStatus.textContent = 'Uploading image...';
