@@ -209,7 +209,7 @@ Restored into `ropebridge-core`:
 
 ```txt
 approved SamplePass v1 structure
-centered seal header
+wax seal only on the original Connect/sign-in state
 recognition banner
 card-based offer layout
 cream/olive/brass design tokens
@@ -453,18 +453,28 @@ Do not break this flow when renaming, cleaning, or refactoring.
 
 ---
 
-## Approved Claim Screen Hierarchy
+## Approved State Branding Rules
 
-The active Claim screen should follow this order:
+The wax seal/logo appears only on the original Connect/sign-in state.
+
+State branding should follow this model:
 
 ```txt
-centered RopeBridge seal/logo
-recognition message if remembered
+Connect / sign-in:
+wax seal allowed
+
+Claim:
+no wax seal
+recognition banner if remembered
 image inside tactile card
 offer title
 description
 CTA button
 limit note
+
+Connected:
+no wax seal
+simple powered-by / useful links only
 ```
 
 The active Claim screen should use the restored `.rb-card rb-flow-card rb-offer-card` structure, not the stripped-down direct-page image/title layout.
@@ -475,12 +485,13 @@ Do not re-add:
 top vendor text
 Raw Honey top subtitle
 SAMPLEPASS eyebrow
-powered by RopeBridge text
 dark app theme
 automatic dark-mode styling
+wax seal on Claim state
+wax seal on Connected state
 ```
 
-The seal/logo is enough as the RopeBridge brand mark.
+RopeBridge branding outside Connect/sign-in should remain quiet and text-only unless explicitly changed.
 
 ---
 
@@ -853,6 +864,7 @@ Connect → Claim → Connected state flow
 returning visitor skip-Connect behavior
 localStorage recognition behavior
 cream / olive / brass visual direction
+wax seal only on the original Connect/sign-in state
 restored approved card-based Claim layout
 fill-in-the-blank create-page concept
 public.interactions table model
@@ -869,6 +881,7 @@ reintroduce SamplePass as platform name
 copy old prototype routes
 rename old lead_requests table
 break the working state flow
+place the wax seal on Claim or Connected states
 replace the approved card-based layout with a stripped-down direct image/title layout
 rebuild the create page when it only needs image-storage wiring
 add dashboard/auth/server complexity without explicit approval
