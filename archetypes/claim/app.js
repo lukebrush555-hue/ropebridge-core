@@ -32,6 +32,7 @@
   applyConfigText();
   applyConfigAssets();
   applySocialLinks();
+  installPhoneFormatter();
 
   const savedVisitor = getSavedVisitor();
 
@@ -40,7 +41,7 @@
   }
 
   if (savedVisitor.phone && phoneInput) {
-    phoneInput.value = savedVisitor.phone.replace(/^\+1\s*/, "");
+    phoneInput.value = formatPhoneForDisplay(savedVisitor.phone);
   }
 
   if (savedVisitor.connected && savedVisitor.phone) {
@@ -131,15 +132,41 @@
     };
   }
 
+  function digitsOnly(value) {
+    return String(value || "").replace(/\D/g, "").slice(0, 10);
+  }
+
+  function formatPhoneForDisplay(value) {
+    const digits = digitsOnly(value.replace(/^\+1\s*/, ""));
+
+    if (digits.length <= 3) {
+      return digits ? `(${digits}` : "";
+    }
+
+    if (digits.length <= 6) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    }
+
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  }
+
   function normalizePhone(value) {
-    return String(value || "").replace(/[^0-9+]/g, "").trim();
+    const digits = digitsOnly(value);
+    return digits ? `+1 ${digits}` : "";
+  }
+
+  function installPhoneFormatter() {
+    if (!phoneInput) return;
+
+    phoneInput.addEventListener("input", function () {
+      phoneInput.value = formatPhoneForDisplay(phoneInput.value);
+    });
   }
 
   function saveVisitorFromForm() {
     const formData = new FormData(connectForm);
     const name = String(formData.get("name") || "").trim();
-    const phone = normalizePhone(formData.get("phone"));
-    const normalizedPhone = phone.startsWith("+1") ? phone : `+1 ${phone}`;
+    const normalizedPhone = normalizePhone(formData.get("phone"));
 
     localStorage.setItem(storageKeys.connected, "true");
     localStorage.setItem(storageKeys.name, name);
