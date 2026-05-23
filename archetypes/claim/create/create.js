@@ -1,8 +1,8 @@
 (function () {
   const editable = document.querySelectorAll('[data-field]');
   const vendorName = document.querySelector('#vendor-name');
-  const vendorCategory = document.querySelector('#vendor-category');
   const imageUpload = document.querySelector('#image-upload');
+  const imageUploadButton = document.querySelector('#image-upload-button');
   const image = document.querySelector('#offer-image');
   const previewLink = document.querySelector('#preview-link');
   const qrCode = document.querySelector('#qr-code');
@@ -42,7 +42,7 @@
 
     url.searchParams.set('vendor', vendor);
     url.searchParams.set('vendor_id', vendorId);
-    url.searchParams.set('category', text(vendorCategory) || 'Free Sample');
+    url.searchParams.set('category', 'Free Sample');
     url.searchParams.set('title', field('title') || 'Free Sample');
     url.searchParams.set('description', field('description') || 'A local sample from this vendor.');
     url.searchParams.set('cta', field('cta') || 'Claim sample');
@@ -121,12 +121,61 @@
     return storageConfig.url.replace(/\/$/, '') + '/storage/v1/object/public/' + storageBucket + '/' + encodeURI(objectPath);
   }
 
+  function qrImageDataUrl() {
+    const img = qrCode.querySelector('img');
+    if (img && img.src) return img.src;
+
+    const canvas = qrCode.querySelector('canvas');
+    if (canvas) return canvas.toDataURL('image/png');
+
+    return '';
+  }
+
+  function downloadQrCode() {
+    const dataUrl = qrImageDataUrl();
+
+    if (!dataUrl) {
+      throw new Error('QR code is not ready yet.');
+    }
+
+    const vendorId = slug(text(vendorName));
+    const downloadLink = document.createElement('a');
+    downloadLink.href = dataUrl;
+    downloadLink.download = vendorId + '-ropebridge-qr.png';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+  }
+
+  async function copyAndDownloadQr() {
+    let copied = false;
+
+    try {
+      await navigator.clipboard.writeText(previewLink.href);
+      copied = true;
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      downloadQrCode();
+      copyStatus.textContent = copied ? 'Link copied and QR code downloaded.' : 'QR code downloaded. Copy failed; use Open preview to copy the URL.';
+      copyStatus.className = copied ? 'rb-status is-success' : 'rb-status is-error';
+    } catch (error) {
+      console.error(error);
+      copyStatus.textContent = copied ? 'Link copied. QR download failed.' : 'Copy and QR download failed. Open the preview and try again.';
+      copyStatus.className = 'rb-status is-error';
+    }
+  }
+
   editable.forEach(function (node) {
     node.addEventListener('input', update);
   });
 
-  [vendorName, vendorCategory].forEach(function (node) {
-    node.addEventListener('input', update);
+  vendorName.addEventListener('input', update);
+
+  imageUploadButton.addEventListener('click', function () {
+    imageUpload.click();
   });
 
   imageUpload.addEventListener('change', async function () {
@@ -156,15 +205,7 @@
     }
   });
 
-  copyButton.addEventListener('click', function () {
-    navigator.clipboard.writeText(previewLink.href).then(function () {
-      copyStatus.textContent = 'Link copied.';
-      copyStatus.className = 'rb-status is-success';
-    }).catch(function () {
-      copyStatus.textContent = 'Copy failed. Open the claim page and copy from the address bar.';
-      copyStatus.className = 'rb-status is-error';
-    });
-  });
+  copyButton.addEventListener('click', copyAndDownloadQr);
 
   update();
 })();
