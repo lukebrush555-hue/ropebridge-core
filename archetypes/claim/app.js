@@ -1,11 +1,12 @@
-(function () {
+(async function () {
   const storageKeys = {
     connected: "ropebridge-connected",
     name: "ropebridge-name",
     phone: "ropebridge-phone"
   };
 
-  const config = applyUrlConfig(window.ROPEBRIDGE_CONFIG || {});
+  const remoteConfig = await loadRemoteConfig();
+  const config = applyUrlConfig(mergeConfig(window.ROPEBRIDGE_CONFIG || {}, remoteConfig || {}));
   const copy = config.copy || {};
   const vendor = config.vendor || {};
   const offer = config.offer || {};
@@ -91,6 +92,36 @@
       submitButton.textContent = offer.cta || defaultSubmitLabel;
     }
   });
+
+  async function loadRemoteConfig() {
+    const params = new URLSearchParams(window.location.search);
+    const configId = params.get("c");
+
+    if (!configId || !/^[a-z0-9-]+$/i.test(configId)) {
+      return null;
+    }
+
+    const endpoint = "https://chqwqnxxggswbsijxnio.supabase.co/storage/v1/object/public/ropebridge-offer-images/claim-configs/" + encodeURIComponent(configId) + ".json";
+
+    try {
+      const response = await fetch(endpoint, { cache: "no-store" });
+      if (!response.ok) throw new Error("Remote config unavailable.");
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  function mergeConfig(baseConfig, overrideConfig) {
+    const merged = Object.assign({}, baseConfig, overrideConfig);
+    merged.vendor = Object.assign({}, baseConfig.vendor || {}, overrideConfig.vendor || {});
+    merged.offer = Object.assign({}, baseConfig.offer || {}, overrideConfig.offer || {});
+    merged.copy = Object.assign({}, baseConfig.copy || {}, overrideConfig.copy || {});
+    merged.tracking = Object.assign({}, baseConfig.tracking || {}, overrideConfig.tracking || {});
+    merged.supabase = Object.assign({}, baseConfig.supabase || {}, overrideConfig.supabase || {});
+    return merged;
+  }
 
   function getSavedVisitor() {
     return {
