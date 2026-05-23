@@ -152,6 +152,7 @@
       CONNECT_SUBHEADLINE: copy.connectSubheadline,
       CONNECT_BODY: copy.connectBody,
       CONNECT_PRIMARY_ACTION: copy.connectPrimaryAction,
+      VENDOR_NAME: vendor.name,
       PRODUCT_NAME: offer.title,
       PRODUCT_DESCRIPTION: offer.description,
       CTA_LABEL: offer.cta,
