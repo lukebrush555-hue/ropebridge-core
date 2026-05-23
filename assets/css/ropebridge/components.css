@@ -44,6 +44,21 @@
   background: url("../../images/ropebridge-wax-seal.svg") center / contain no-repeat;
 }
 
+.rb-corner-header {
+  display: flex;
+  justify-content: flex-end;
+  min-height: 44px;
+  margin: 0 0 12px;
+}
+
+.rb-corner-seal {
+  display: block;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: url("../../images/ropebridge-wax-seal.svg") center / contain no-repeat;
+}
+
 .rb-field-stack {
   display: grid;
   gap: 18px;
