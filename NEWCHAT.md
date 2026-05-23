@@ -1,6 +1,6 @@
 # RopeBridge New Chat Startup
 
-_Last updated: 2026-05-13_
+_Last updated: 2026-05-23_
 
 ## Start Here
 
@@ -117,6 +117,12 @@ Current GitHub Pages URL:
 https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/
 ```
 
+Current create-page URL:
+
+```txt
+https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/
+```
+
 Current known-good cache-busted test URL after restoring the approved visual migration:
 
 ```txt
@@ -146,12 +152,17 @@ ropebridge-core/
     images/
       ropebridge-seal.svg
       samplepass-stand.jpg
+      claim-image-arriving-soon.svg
+      markup_1000003500.jpg
 
   archetypes/
     claim/
       index.html
       app.js
       README.md
+      create/
+        index.html
+        create.js
 
     handshake/
       README.md
@@ -162,6 +173,7 @@ ropebridge-core/
   configs/
     examples/
       claim-samplepass-demo.js
+      claim-samplepass-demo-local.js
 
   supabase/
     schema.sql
@@ -264,7 +276,6 @@ RLS enabled
 anon INSERT only
 authenticated no broad grants
 service_role full access
-rows: 0 initially
 ```
 
 Columns:
@@ -294,6 +305,52 @@ remember
 
 There was an accidental table named `public."public.interactions"` created during setup. It was removed.
 
+### Supabase Storage status for vendor offer images
+
+Storage bucket created:
+
+```txt
+ropebridge-offer-images
+```
+
+Bucket intent:
+
+```txt
+Store public vendor offer/sample images uploaded from the Claim create page.
+```
+
+Current bucket settings:
+
+```txt
+public: true
+file size limit: 5 MB
+allowed MIME types: image/jpeg, image/png, image/webp, image/gif
+```
+
+Current policies on `storage.objects`:
+
+```txt
+anon SELECT allowed for bucket_id = 'ropebridge-offer-images'
+anon INSERT allowed for bucket_id = 'ropebridge-offer-images'
+```
+
+Important: a public bucket only makes files publicly readable. Uploads still require storage policies. Those policies now exist for MVP testing.
+
+Security note:
+
+```txt
+Anonymous public image upload is acceptable only as an MVP/prototype shortcut.
+Future hardening should include one or more of:
+- stricter upload path rules
+- rate limiting
+- CAPTCHA
+- Edge Function validation
+- authenticated vendor mode
+- cleanup process for unused uploads
+```
+
+Do not use a service_role key in browser code.
+
 ---
 
 ## Security Rules
@@ -314,15 +371,22 @@ Supabase URL
 Supabase publishable key
 ```
 
-That is acceptable only because RLS and grants restrict browser access.
+That is acceptable only because RLS, grants, and storage policies restrict browser access.
 
-Browser behavior should remain:
+Browser behavior for database interactions should remain:
 
 ```txt
 INSERT only
 no SELECT
 no UPDATE
 no DELETE
+```
+
+Browser behavior for current MVP Storage images may be:
+
+```txt
+INSERT into ropebridge-offer-images
+SELECT/read public image URLs from ropebridge-offer-images
 ```
 
 `.env.example` should use placeholders only:
@@ -334,7 +398,7 @@ SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 
 Do not put real secrets in `.env.example`.
 
-Public insert endpoint spam is a known MVP risk. Future hardening may include:
+Public insert/upload endpoint spam is a known MVP risk. Future hardening may include:
 
 ```txt
 rate limits
@@ -417,6 +481,105 @@ automatic dark-mode styling
 ```
 
 The seal/logo is enough as the RopeBridge brand mark.
+
+---
+
+## Claim Create Page / Vendor Image Upload Status
+
+The Claim archetype has a vendor-facing create page:
+
+```txt
+/archetypes/claim/create/
+```
+
+Files:
+
+```txt
+archetypes/claim/create/index.html
+archetypes/claim/create/create.js
+```
+
+Purpose:
+
+```txt
+Let a vendor fill in the Claim page visually, like fill-in-the-blank, then immediately get a generated Claim URL and QR code.
+```
+
+Current create-page behavior:
+
+```txt
+Editable offer title
+Editable description
+Editable CTA button text
+Editable limit note
+Vendor name field
+Vendor category field
+QR code generation
+Copy generated link
+Image upload field exists
+```
+
+Important current limitation:
+
+```txt
+The image upload currently previews locally only.
+It uses URL.createObjectURL(file).
+That means the creator sees the image on their device, but the generated QR/link still uses the placeholder image.
+```
+
+Current placeholder image behavior:
+
+```txt
+Generated Claim links use:
+../../../assets/images/claim-image-arriving-soon.svg
+```
+
+Do not confuse local image preview with real hosted image upload.
+
+The main Claim page already supports image URLs through query params:
+
+```txt
+?image=
+?image_alt=
+```
+
+So the main Claim page does not need a major refactor for vendor images. The create page needs to upload the selected image and place the resulting public image URL into the generated Claim URL.
+
+Needed next implementation:
+
+```txt
+Update archetypes/claim/create/create.js so imageUpload change:
+1. validates image file type and max size
+2. uploads file to Supabase Storage bucket ropebridge-offer-images
+3. gets the public image URL
+4. stores that URL in memory
+5. regenerates the Claim URL with ?image=<public URL>
+6. regenerates the QR code using that updated URL
+7. shows a clear success/error status
+```
+
+Do not rebuild the create page.
+Do not add a second upload field.
+Do not add a dashboard or admin panel.
+Do not add heavy auth yet.
+Do not move this to Vercel/server functions unless explicitly requested.
+This can remain static-first using Supabase Storage + anon upload policy for the MVP.
+
+Implementation warning:
+
+```txt
+The create page lives under /archetypes/claim/create/.
+Relative asset paths from create.js must account for that route depth.
+The generated Claim URL should replace /create/ with /.
+```
+
+Current diagnosis:
+
+```txt
+The problem is not “add an upload field.”
+The upload field already exists.
+The problem is “turn local preview upload into hosted Supabase Storage upload and inject the hosted URL into the generated QR link.”
+```
 
 ---
 
@@ -643,10 +806,16 @@ Check GitHub Pages deployment:
 Actions tab → Deploy static site to GitHub Pages
 ```
 
-Current test route:
+Current Claim route:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/?v=restored-approved-1
+https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/
+```
+
+Current create route:
+
+```txt
+https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/
 ```
 
 If Chrome Android makes the page look tiny, check:
@@ -661,12 +830,14 @@ Potential next work:
 
 ```txt
 1. Verify GitHub Pages deployment shows the restored approved Claim layout.
-2. Replace placeholder Supabase values in configs/examples/claim-samplepass-demo.js if testing live inserts.
-3. Test Claim flow against public.interactions.
-4. Confirm inserts land in Supabase.
-5. Inspect visual fidelity on mobile.
-6. Verify State 3 links and Connected screen.
-7. Build Handshake after Claim is stable.
+2. Verify /archetypes/claim/create/ loads on mobile.
+3. Replace local-only image preview with Supabase Storage upload in create.js.
+4. Confirm generated QR code uses the uploaded public image URL.
+5. Test Claim flow against public.interactions.
+6. Confirm inserts land in Supabase.
+7. Inspect visual fidelity on mobile.
+8. Verify State 3 links and Connected screen.
+9. Build Handshake after Claim is stable.
 ```
 
 ---
@@ -683,8 +854,10 @@ returning visitor skip-Connect behavior
 localStorage recognition behavior
 cream / olive / brass visual direction
 restored approved card-based Claim layout
+fill-in-the-blank create-page concept
 public.interactions table model
-browser insert-only posture
+browser insert-only posture for database rows
+static-first implementation unless explicitly changed
 ```
 
 Do not:
@@ -697,6 +870,7 @@ copy old prototype routes
 rename old lead_requests table
 break the working state flow
 replace the approved card-based layout with a stripped-down direct image/title layout
+rebuild the create page when it only needs image-storage wiring
 add dashboard/auth/server complexity without explicit approval
 ```
 
