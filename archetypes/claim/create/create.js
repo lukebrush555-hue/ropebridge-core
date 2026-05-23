@@ -5,6 +5,9 @@
   const imageUploadButton = document.querySelector('#image-upload-button');
   const image = document.querySelector('#offer-image');
   const previewLink = document.querySelector('#preview-link');
+  const previewToggle = document.querySelector('#preview-toggle');
+  const inlinePreviewCard = document.querySelector('#inline-preview-card');
+  const inlinePreview = document.querySelector('#inline-preview');
   const qrCode = document.querySelector('#qr-code');
   const copyButton = document.querySelector('#copy-link');
   const copyStatus = document.querySelector('#copy-status');
@@ -17,6 +20,8 @@
 
   let uploadedImageUrl = '';
   let uploadedImageAlt = '';
+  let previewIsOpen = false;
+  let previewRefreshTimer = null;
 
   function text(node) {
     return String(node && ('value' in node ? node.value : node.textContent) || '').replace(/\s+/g, ' ').trim();
@@ -55,6 +60,15 @@
     return url.toString();
   }
 
+  function scheduleInlinePreviewRefresh(link) {
+    if (!previewIsOpen || !inlinePreview) return;
+
+    window.clearTimeout(previewRefreshTimer);
+    previewRefreshTimer = window.setTimeout(function () {
+      inlinePreview.src = link;
+    }, 250);
+  }
+
   function update() {
     const link = claimUrl();
 
@@ -65,6 +79,20 @@
       new QRCode(qrCode, { text: link, width: 196, height: 196 });
     } else {
       qrCode.textContent = 'QR unavailable. Use the copied link instead.';
+    }
+
+    scheduleInlinePreviewRefresh(link);
+  }
+
+  function toggleInlinePreview() {
+    previewIsOpen = !previewIsOpen;
+    inlinePreviewCard.classList.toggle('is-visible', previewIsOpen);
+    previewToggle.setAttribute('aria-expanded', String(previewIsOpen));
+    previewToggle.textContent = previewIsOpen ? 'Hide preview' : 'Preview page';
+
+    if (previewIsOpen) {
+      inlinePreview.src = previewLink.href;
+      inlinePreviewCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -159,11 +187,11 @@
 
     try {
       downloadQrCode();
-      copyStatus.textContent = copied ? 'Link copied and QR code downloaded.' : 'QR code downloaded. Copy failed; use Open preview to copy the URL.';
+      copyStatus.textContent = copied ? 'Link copied and QR code downloaded.' : 'QR code downloaded. Copy failed; use Open full page to copy the URL.';
       copyStatus.className = copied ? 'rb-status is-success' : 'rb-status is-error';
     } catch (error) {
       console.error(error);
-      copyStatus.textContent = copied ? 'Link copied. QR download failed.' : 'Copy and QR download failed. Open the preview and try again.';
+      copyStatus.textContent = copied ? 'Link copied. QR download failed.' : 'Copy and QR download failed. Open the full page and try again.';
       copyStatus.className = 'rb-status is-error';
     }
   }
@@ -173,6 +201,7 @@
   });
 
   vendorName.addEventListener('input', update);
+  previewToggle.addEventListener('click', toggleInlinePreview);
 
   imageUploadButton.addEventListener('click', function () {
     imageUpload.click();
