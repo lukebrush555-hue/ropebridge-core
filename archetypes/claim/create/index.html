@@ -93,6 +93,26 @@
         border-radius: 15px;
         font-size: 16px;
       }
+
+      .rb-inline-preview-card {
+        display: none;
+        margin-top: 18px;
+        padding: 12px;
+        overflow: hidden;
+      }
+
+      .rb-inline-preview-card.is-visible {
+        display: block;
+      }
+
+      .rb-inline-preview-frame {
+        display: block;
+        width: 100%;
+        height: 740px;
+        border: 0;
+        border-radius: 20px;
+        background: var(--rb-bg);
+      }
     </style>
   </head>
   <body>
@@ -126,10 +146,15 @@
             <p id="output-title" class="rb-section-label">Scan to preview</p>
             <div id="qr-code" class="rb-qr-box" aria-label="QR code for generated claim page"></div>
             <div class="rb-output-actions">
-              <a id="preview-link" class="rb-button rb-small-button rb-output-link" href="#" target="_blank" rel="noreferrer">Open preview</a>
+              <button id="preview-toggle" class="rb-button rb-small-button" type="button" aria-expanded="false" aria-controls="inline-preview-card">Preview page</button>
               <button id="copy-link" class="rb-button rb-small-button" type="button">Copy link + Download QR code</button>
             </div>
+            <a id="preview-link" class="rb-output-link" href="#" target="_blank" rel="noreferrer">Open full page</a>
             <p id="copy-status" class="rb-status" role="status" aria-live="polite"></p>
+          </section>
+
+          <section id="inline-preview-card" class="rb-card rb-inline-preview-card" aria-label="Live page preview">
+            <iframe id="inline-preview" class="rb-inline-preview-frame" title="Claim page preview"></iframe>
           </section>
 
           <p class="rb-powered-by">powered by RopeBridge</p>
