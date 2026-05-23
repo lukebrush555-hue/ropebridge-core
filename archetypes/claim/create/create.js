@@ -22,9 +22,6 @@
   let uploadedImageAlt = '';
   let previewIsOpen = false;
   let previewRefreshTimer = null;
-  let configSaveTimer = null;
-  let configId = '';
-  let configSaveController = null;
 
   function text(node) {
     return String(node && ('value' in node ? node.value : node.textContent) || '').replace(/\s+/g, ' ').trim();
@@ -50,109 +47,33 @@
     return valueOrPlaceholder(fieldNode(name), fallback);
   }
 
-  function getVendor() {
-    const name = valueOrPlaceholder(vendorName, 'Sample Vendor');
-    const id = slug(name);
-
-    return { name, id };
-  }
-
-  function buildClaimConfig() {
-    const vendor = getVendor();
-    const imageUrl = uploadedImageUrl || defaultImage;
-    const imageAlt = uploadedImageAlt || vendor.name + ' sample preview';
-
-    return {
-      archetype: 'claim',
-      campaignId: vendor.id + '-sample',
-      vendor: {
-        id: vendor.id,
-        name: vendor.name,
-        category: 'Free Sample'
-      },
-      offer: {
-        title: field('title', 'Free Sample'),
-        description: field('description', 'A local sample from this vendor.'),
-        cta: field('cta', 'Claim sample'),
-        limitNote: field('limitNote', 'One claim per person, per day.'),
-        image: imageUrl,
-        imageAlt: imageAlt
-      },
-      tracking: {
-        qrId: vendor.id + '-instant-qr'
-      }
-    };
-  }
-
-  function shortClaimUrl() {
+  function claimUrl() {
     const url = new URL(window.location.href);
     url.pathname = url.pathname.replace('/create/', '/');
     url.search = '';
-    url.searchParams.set('c', configId || makeConfigId());
+
+    const vendor = valueOrPlaceholder(vendorName, 'Sample Vendor');
+    const vendorId = slug(vendor);
+    const imageUrl = uploadedImageUrl || defaultImage;
+    const imageAlt = uploadedImageAlt || vendor + ' sample preview';
+
+    url.searchParams.set('vendor', vendor);
+    url.searchParams.set('vendor_id', vendorId);
+    url.searchParams.set('category', 'Free Sample');
+    url.searchParams.set('title', field('title', 'Free Sample'));
+    url.searchParams.set('description', field('description', 'A local sample from this vendor.'));
+    url.searchParams.set('cta', field('cta', 'Claim sample'));
+    url.searchParams.set('limit', field('limitNote', 'One claim per person, per day.'));
+    url.searchParams.set('image', imageUrl);
+    url.searchParams.set('image_alt', imageAlt);
+    url.searchParams.set('campaign', vendorId + '-sample');
+    url.searchParams.set('qr', vendorId + '-instant-qr');
+
     return url.toString();
   }
 
-  function makeConfigId() {
-    if (configId) return configId;
-
-    const vendor = getVendor();
-    const randomPart = Math.random().toString(36).slice(2, 7);
-    configId = vendor.id + '-' + Date.now().toString(36) + '-' + randomPart;
-    return configId;
-  }
-
-  async function saveClaimConfig() {
-    const id = makeConfigId();
-    const config = buildClaimConfig();
-    const objectPath = 'claim-configs/' + id + '.json';
-    const uploadEndpoint = storageConfig.url.replace(/\/$/, '') + '/storage/v1/object/' + storageBucket + '/' + encodeURI(objectPath);
-
-    if (configSaveController) {
-      configSaveController.abort();
-    }
-
-    configSaveController = new AbortController();
-
-    const response = await fetch(uploadEndpoint, {
-      method: 'POST',
-      headers: {
-        apikey: storageConfig.publishableKey,
-        Authorization: 'Bearer ' + storageConfig.publishableKey,
-        'Content-Type': 'application/json',
-        'x-upsert': 'true'
-      },
-      body: JSON.stringify(config),
-      signal: configSaveController.signal
-    });
-
-    if (!response.ok) {
-      throw new Error('Config save failed.');
-    }
-
-    return id;
-  }
-
-  function scheduleConfigSave() {
-    window.clearTimeout(configSaveTimer);
-    configSaveTimer = window.setTimeout(async function () {
-      try {
-        await saveClaimConfig();
-        renderLinkAndQr();
-        if (copyStatus.textContent === 'Saving page...') {
-          copyStatus.textContent = 'Page saved. QR and link are ready.';
-          copyStatus.className = 'rb-status is-success';
-        }
-      } catch (error) {
-        if (error.name === 'AbortError') return;
-        console.error(error);
-        copyStatus.textContent = 'Could not save the short link yet. Try again.';
-        copyStatus.className = 'rb-status is-error';
-      }
-    }, 450);
-  }
-
-  function renderLinkAndQr() {
-    const link = shortClaimUrl();
+  function update() {
+    const link = claimUrl();
 
     previewLink.href = link;
     qrCode.innerHTML = '';
@@ -164,11 +85,6 @@
     }
 
     scheduleInlinePreviewRefresh(link);
-  }
-
-  function update() {
-    renderLinkAndQr();
-    scheduleConfigSave();
   }
 
   function scheduleInlinePreviewRefresh(link) {
@@ -222,9 +138,9 @@
   async function uploadImage(file) {
     validateImage(file);
 
-    const vendor = getVendor();
-    const fileName = vendor.id + '-' + Date.now() + '.' + extensionFor(file);
-    const objectPath = vendor.id + '/' + fileName;
+    const vendorId = slug(valueOrPlaceholder(vendorName, 'vendor'));
+    const fileName = vendorId + '-' + Date.now() + '.' + extensionFor(file);
+    const objectPath = vendorId + '/' + fileName;
     const uploadEndpoint = storageConfig.url.replace(/\/$/, '') + '/storage/v1/object/' + storageBucket + '/' + encodeURI(objectPath);
 
     const response = await fetch(uploadEndpoint, {
@@ -262,10 +178,10 @@
       throw new Error('QR code is not ready yet.');
     }
 
-    const vendor = getVendor();
+    const vendorId = slug(valueOrPlaceholder(vendorName, 'vendor'));
     const downloadLink = document.createElement('a');
     downloadLink.href = dataUrl;
-    downloadLink.download = vendor.id + '-ropebridge-qr.png';
+    downloadLink.download = vendorId + '-ropebridge-qr.png';
     document.body.appendChild(downloadLink);
     downloadLink.click();
     downloadLink.remove();
@@ -274,12 +190,7 @@
   async function copyAndDownloadQr() {
     let copied = false;
 
-    copyStatus.textContent = 'Saving page...';
-    copyStatus.className = 'rb-status';
-
     try {
-      await saveClaimConfig();
-      renderLinkAndQr();
       await navigator.clipboard.writeText(previewLink.href);
       copied = true;
     } catch (error) {
@@ -288,11 +199,11 @@
 
     try {
       downloadQrCode();
-      copyStatus.textContent = copied ? 'Short link copied and QR code downloaded.' : 'QR code downloaded. Copy failed; use Open full page to copy the short URL.';
+      copyStatus.textContent = copied ? 'Link copied and QR code downloaded.' : 'QR code downloaded. Copy failed; use Open full page to copy the URL.';
       copyStatus.className = copied ? 'rb-status is-success' : 'rb-status is-error';
     } catch (error) {
       console.error(error);
-      copyStatus.textContent = copied ? 'Short link copied. QR download failed.' : 'Copy and QR download failed. Open the full page and try again.';
+      copyStatus.textContent = copied ? 'Link copied. QR download failed.' : 'Copy and QR download failed. Open the full page and try again.';
       copyStatus.className = 'rb-status is-error';
     }
   }
@@ -323,7 +234,7 @@
 
     try {
       uploadedImageUrl = await uploadImage(file);
-      copyStatus.textContent = 'Image uploaded. Short link and QR are updating.';
+      copyStatus.textContent = 'Image uploaded. The QR code now uses this image.';
       copyStatus.className = 'rb-status is-success';
       update();
     } catch (error) {
@@ -337,6 +248,5 @@
 
   copyButton.addEventListener('click', copyAndDownloadQr);
 
-  makeConfigId();
   update();
 })();
