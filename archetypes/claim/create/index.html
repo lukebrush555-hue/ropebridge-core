@@ -22,6 +22,12 @@
         background: rgba(255,250,242,0.72);
       }
 
+      .rb-editable:empty::before {
+        content: attr(data-placeholder);
+        color: rgba(63,63,59,0.38);
+        pointer-events: none;
+      }
+
       .rb-upload-target {
         position: relative;
         cursor: pointer;
@@ -122,7 +128,7 @@
           <header class="rb-claim-header">
             <div class="rb-claim-heading">
               <p class="rb-recognition-banner is-visible">Tap the sample page text and fill in the blanks. The preview link and QR update immediately.</p>
-              <h1 id="vendor-name" class="rb-claim-vendor rb-editable" contenteditable="true">Backyard Blooms</h1>
+              <h1 id="vendor-name" class="rb-claim-vendor rb-editable" contenteditable="true" data-placeholder="Business name"></h1>
             </div>
             <div class="rb-corner-seal" aria-hidden="true"></div>
           </header>
@@ -134,11 +140,11 @@
             <input id="image-upload" class="rb-visually-hidden" type="file" accept="image/*" />
 
             <div class="rb-offer-copy">
-              <h1 id="offer-title" class="rb-offer-title rb-editable" contenteditable="true" data-field="title">Wildflower Raw Honey</h1>
-              <p class="rb-offer-description rb-editable" contenteditable="true" data-field="description">Made locally in small seasonal batches using wildflower nectar gathered throughout the Saucon Valley region.</p>
+              <h1 id="offer-title" class="rb-offer-title rb-editable" contenteditable="true" data-field="title" data-placeholder="Sample name"></h1>
+              <p class="rb-offer-description rb-editable" contenteditable="true" data-field="description" data-placeholder="Short description"></p>
             </div>
 
-            <button id="cta-preview" class="rb-button rb-editable" type="button" contenteditable="true" data-field="cta">Claim sample</button>
+            <button id="cta-preview" class="rb-button rb-editable" type="button" contenteditable="true" data-field="cta" data-placeholder="Claim sample"></button>
             <p class="rb-limit-note" data-field="limitNote">One claim per person, per day.</p>
           </section>
 
