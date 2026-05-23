@@ -4,13 +4,13 @@ _Last updated: 2026-05-23_
 
 ## Start Here
 
-This project is centered on the clean repo:
+Current repo:
 
 ```txt
 lukebrush555-hue/ropebridge-core
 ```
 
-The older repo remains useful as historical/prototype context only:
+Historical/prototype repo only:
 
 ```txt
 lukebrush555-hue/qr-intake-system
@@ -18,7 +18,7 @@ lukebrush555-hue/qr-intake-system
 
 Do **not** treat `qr-intake-system` as the current production foundation unless explicitly asked.
 
-Current product name:
+Current product:
 
 ```txt
 RopeBridge
@@ -49,39 +49,37 @@ Current status:
 
 ```txt
 Claim page visual design is complete and approved.
-Claim create page is now aligned with Claim and works as a fill-in-the-blank generator.
-Create page supports hosted Supabase Storage image upload, QR generation, one-tap copy+QR download, and inline preview.
+Claim Create page mirrors Claim and works as a fill-in-the-blank generator.
+Create uses true placeholder text, tap-image upload, inline preview, and a submit-for-approval workflow.
+QR/link download tools were removed from the visible Create flow for now.
+Short-link JSON config storage is paused; long draft URLs are the stable fallback.
 ```
 
 ---
 
-## Current Repo / Links
+## Current Links
 
-Primary repo:
-
-```txt
-lukebrush555-hue/ropebridge-core
-```
-
-Current GitHub Pages URL:
+Claim page:
 
 ```txt
 https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/
 ```
 
-Current create-page URL:
+Create page:
 
 ```txt
 https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/
 ```
 
-Current latest cache-busted test URL:
+Latest Create test URL:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/?v=inline-preview-1
+https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/?v=approval-flow-1
 ```
 
-Current structure:
+---
+
+## Current Repo Structure
 
 ```txt
 ropebridge-core/
@@ -95,12 +93,11 @@ ropebridge-core/
   .gitignore
 
   assets/
-    css/
-      ropebridge/
-        tokens.css
-        base.css
-        components.css
-        states.css
+    css/ropebridge/
+      tokens.css
+      base.css
+      components.css
+      states.css
     images/
       ropebridge-wax-seal.svg
       samplepass-stand.jpg
@@ -115,28 +112,19 @@ ropebridge-core/
       create/
         index.html
         create.js
+    handshake/README.md
+    remember/README.md
 
-    handshake/
-      README.md
-
-    remember/
-      README.md
-
-  configs/
-    examples/
-      claim-samplepass-demo.js
-      claim-samplepass-demo-local.js
+  configs/examples/
+    claim-samplepass-demo.js
+    claim-samplepass-demo-local.js
 
   supabase/
     schema.sql
     migrations/
       202605130001_init_interactions.sql
-```
 
-GitHub Pages workflow exists:
-
-```txt
-.github/workflows/deploy-pages.yml
+  .github/workflows/deploy-pages.yml
 ```
 
 ---
@@ -178,8 +166,6 @@ SamplePass is no longer the top-level product. It is only an example/demo config
 
 The state flow is critical and must be preserved.
 
-Current behavior:
-
 ```txt
 First-time visitor:
 Connect → Claim → Connected
@@ -213,15 +199,11 @@ ropebridge-name
 ropebridge-phone
 ```
 
-Do not break this flow when renaming, cleaning, or refactoring.
-
 ---
 
 ## Approved Claim Visual Design — COMPLETE
 
-Claim is visually approved as of 2026-05-23.
-
-Use this layout for the active Claim state:
+Approved active Claim layout:
 
 ```txt
 top header:
@@ -244,14 +226,12 @@ Approved typography and sizing:
 
 ```txt
 Recognition line:
-  matches create-page note text
   font-size: 14px
   line-height: 1.45
   font-family: var(--rb-font-sans)
   color: rgba(63,63,59,0.62)
 
 Vendor business name:
-  uses same family/weight/spacing as the original offer headline
   font-family: var(--rb-font-serif)
   font-size: 34px
   line-height: 1.04
@@ -262,7 +242,6 @@ Vendor business name:
 RopeBridge corner seal:
   76px × 76px
   top right of Claim state
-  same visual size as create-page centered logo
 
 Offer title:
   font-size: 22px
@@ -277,27 +256,22 @@ assets/images/ropebridge-wax-seal.svg
 
 Important: use the current approved raster-style wax seal asset. Do not replace it with a generated line-art/vector-only seal.
 
-Current Claim styling lives mainly in:
-
-```txt
-assets/css/ropebridge/components.css
-assets/css/ropebridge/states.css
-```
-
-Current Claim structure lives in:
+Claim files:
 
 ```txt
 archetypes/claim/index.html
 archetypes/claim/app.js
+assets/css/ropebridge/components.css
+assets/css/ropebridge/states.css
 ```
 
 ---
 
 ## Approved Claim Create Page — CURRENT
 
-Create is now intended to mirror the Claim output rather than feel like a detached form.
+Create mirrors the Claim output rather than feeling like a detached form.
 
-Approved create-page layout:
+Approved Create layout:
 
 ```txt
 [Instruction text]                         [wax seal]
@@ -311,69 +285,115 @@ Approved create-page layout:
   [editable CTA]
   [noneditable limit note]
 
-[QR preview + actions]
+[Review card]
+  [Preview page]
+  [Submit for approval] only after preview opens
 
 [inline preview panel]
 ```
 
-Approved create-page behavior:
+Approved Create behavior:
 
 ```txt
 Vendor name is editable directly in the header.
-Category field is removed from the visible UI.
+Text fields use true placeholder behavior; placeholder text is not real content.
+Category field is removed from visible UI.
 The separate visible upload image field is removed.
 The image card itself is the upload target.
-A subtle “Tap to upload image” overlay explains the image action.
+A subtle “Tap to upload image” overlay explains image upload.
 Limit note is not editable in the create UI.
 Image upload validates file type and size.
-Image upload stores the selected image in Supabase Storage bucket ropebridge-offer-images.
-Generated Claim URL receives the hosted public image URL in ?image=.
-QR code updates immediately after edits.
-```
-
-Approved QR/action section:
-
-```txt
-[QR code]
-
-[Preview page]
-[Copy link + Download QR code]
-[Open full page]
-```
-
-Behavior:
-
-```txt
-Preview page opens an inline iframe preview below the QR tools.
-Button changes to Hide preview while open.
+Image upload stores selected image in Supabase Storage bucket ropebridge-offer-images.
+Generated draft Claim URL receives the hosted public image URL in ?image=.
+Preview page opens an inline iframe preview.
 Inline preview refreshes automatically as edits change.
-Open full page remains as a secondary full-page test link.
-Copy link + Download QR code is one action:
-  - copies the generated Claim URL
-  - downloads the QR code PNG
+Submit for approval appears after preview opens.
 ```
 
-Current create-page files:
+Removed from visible Create flow for now:
+
+```txt
+Scan to preview label
+QR code block
+Copy link + Download QR code button
+Open full page link
+```
+
+Current approval behavior:
+
+```txt
+Submit for approval validates that business name and sample name are filled.
+For the current MVP implementation, it copies the long draft Claim URL and shows a submitted-for-approval status.
+This keeps the working long URL fallback stable and avoids the broken short-link JSON config approach.
+```
+
+Important architectural decision:
+
+```txt
+Vendor does not publish directly.
+Vendor submits a draft for approval.
+User/admin reviews and can fix copy, image, slug, URL, QR, and typos before anything goes live.
+```
+
+Preferred vendor-facing label:
+
+```txt
+Submit for approval
+```
+
+Do not use “Publish” on the vendor-facing Create page yet. It implies the vendor controls final release.
+
+Create files:
 
 ```txt
 archetypes/claim/create/index.html
 archetypes/claim/create/create.js
 ```
 
-Recent create-page commits:
+Recent relevant commits:
 
 ```txt
-1ef6283  Align create page with approved Claim layout
-31f8ffb  Add tap-image upload and QR download action
-35e3d45  Add inline preview panel to create page
-c7b580a  Wire inline preview refresh on create page
+8efc834 Restore long URL create links
+0bd1874 Point create page to restored long link script
+aee0432 Simplify create output to approval submission
+987043e Add preview approval UI to create page
 ```
 
 ---
 
-## Approved State Branding Rules
+## Short-Link / Redirect Decision
 
-Current approved state branding:
+Short-link JSON config storage was attempted and paused.
+
+Problem:
+
+```txt
+The short-link approach tried to save claim-configs/*.json from the browser into Supabase Storage.
+That introduced 400 errors and broke preview.
+```
+
+Stable fallback:
+
+```txt
+Create generates a long draft Claim URL.
+That long URL works and includes all draft page data as query parameters.
+```
+
+Better future model:
+
+```txt
+Create generates the working long draft URL
+→ vendor submits for approval
+→ admin/user reviews and approves
+→ separate redirect/shortener layer maps a clean URL to the approved long URL
+→ QR uses the clean approved URL
+```
+
+Do not reintroduce browser-side JSON config saving into Create unless explicitly requested.
+
+---
+
+## Approved State Branding Rules
 
 ```txt
 Connect / sign-in:
@@ -392,6 +412,7 @@ Create:
 instruction line + editable vendor name on the left
 small RopeBridge wax seal at top right
 Claim-style editable card
+Preview → Submit for approval
 ```
 
 Do not re-add:
@@ -406,13 +427,12 @@ dark app theme
 automatic dark-mode styling
 separate visible upload-image field on Create
 category field on Create
+QR/export tools before approval
 ```
 
 ---
 
 ## Approved Visual Direction
-
-The approved visual direction is:
 
 ```txt
 cream / olive / brass
@@ -426,7 +446,7 @@ not dark dashboard
 not QR tool UI
 ```
 
-Important theme rule:
+Theme rule:
 
 ```txt
 Force the approved light cream / olive / brass RopeBridge theme regardless of device dark-mode settings.
@@ -446,28 +466,15 @@ project ref: chqwqnxxggswbsijxnio
 
 Do not create a new Supabase project yet.
 
-The new RopeBridge table is:
+Tables:
 
 ```txt
-public.interactions
+public.interactions       = live Claim interactions
+public.lead_requests      = old prototype table; do not rename
+public.claim_submissions  = created for future approval workflow
 ```
 
-The old prototype table remains:
-
-```txt
-public.lead_requests
-```
-
-Do not rename `lead_requests`. Leave it as historical/prototype data.
-
-Current intended split:
-
-```txt
-old qr-intake-system repo → public.lead_requests
-new ropebridge-core repo → public.interactions
-```
-
-`public.interactions` exists and has:
+`public.interactions`:
 
 ```txt
 RLS enabled
@@ -476,36 +483,33 @@ authenticated no broad grants
 service_role full access
 ```
 
-Columns:
+`public.claim_submissions`:
+
+```txt
+Created 2026-05-23.
+Intended for future approval submissions.
+Currently not fully wired into Create because the first safe repo update kept submission as copied long draft URL only.
+```
+
+Claim submissions columns:
 
 ```txt
 id
 created_at
-archetype
-campaign_id
+status
 vendor_id
-qr_id
-visitor_name
-visitor_phone
-visitor_email
-business_name
-action_label
+vendor_name
+offer_title
+offer_description
+cta_label
+limit_note
+image_url
+image_alt
+draft_url
 metadata
 ```
 
-Allowed archetypes:
-
-```txt
-claim
-handshake
-remember
-```
-
-There was an accidental table named `public."public.interactions"` created during setup. It was removed.
-
-### Supabase Storage status for vendor offer images
-
-Storage bucket created:
+Storage bucket:
 
 ```txt
 ropebridge-offer-images
@@ -517,34 +521,19 @@ Bucket intent:
 Store public vendor offer/sample images uploaded from the Claim create page.
 ```
 
-Current bucket settings:
+Bucket settings:
 
 ```txt
 public: true
 file size limit: 5 MB
-allowed MIME types: image/jpeg, image/png, image/webp, image/gif
+allowed MIME types include image/jpeg, image/png, image/webp, image/gif
 ```
-
-Current policies on `storage.objects`:
-
-```txt
-anon SELECT allowed for bucket_id = 'ropebridge-offer-images'
-anon INSERT allowed for bucket_id = 'ropebridge-offer-images'
-```
-
-Important: a public bucket only makes files publicly readable. Uploads still require storage policies. Those policies now exist for MVP testing.
 
 Security note:
 
 ```txt
 Anonymous public image upload is acceptable only as an MVP/prototype shortcut.
-Future hardening should include one or more of:
-- stricter upload path rules
-- rate limiting
-- CAPTCHA
-- Edge Function validation
-- authenticated vendor mode
-- cleanup process for unused uploads
+Future hardening should include stricter path rules, rate limiting, CAPTCHA, Edge Function validation, authenticated vendor mode, and cleanup of unused uploads.
 ```
 
 Do not use a service_role key in browser code.
@@ -569,9 +558,7 @@ Supabase URL
 Supabase publishable key
 ```
 
-That is acceptable only because RLS, grants, and storage policies restrict browser access.
-
-Browser behavior for database interactions should remain:
+Browser database behavior should remain:
 
 ```txt
 INSERT only
@@ -580,7 +567,7 @@ no UPDATE
 no DELETE
 ```
 
-Browser behavior for current MVP Storage images may be:
+Browser Storage behavior for current MVP images may be:
 
 ```txt
 INSERT into ropebridge-offer-images
@@ -594,13 +581,11 @@ SUPABASE_URL=your_supabase_project_url
 SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 ```
 
-Do not put real secrets in `.env.example`.
-
 ---
 
 ## Claim Config Model
 
-Use one global config object:
+Use one global config object for direct config-based Claim pages:
 
 ```js
 window.ROPEBRIDGE_CONFIG = {
@@ -644,7 +629,7 @@ window.ROPEBRIDGE_CONFIG = {
 };
 ```
 
-Do not use these old globals in the new repo:
+Do not use old globals:
 
 ```txt
 SAMPLEPASS_DEMO_CONFIG
@@ -656,8 +641,6 @@ SAMPLEPASS_DESIGN_SYSTEM_V1_CONFIG
 ## Archetypes
 
 ### Claim
-
-Claim means:
 
 ```txt
 “I want the thing.”
@@ -674,11 +657,9 @@ claim raffle entry
 claim event perk
 ```
 
-Claim and Create visual/design flow are complete enough for testing. Future Claim work should focus on polish, vendor testing, and security hardening rather than redesign.
+Claim and Create are stable enough for testing. Future Claim work should focus on vendor testing, approval workflow polish, short-link/redirect layer, and security hardening rather than redesign.
 
 ### Handshake
-
-Handshake means:
 
 ```txt
 “I want the relationship.”
@@ -690,20 +671,7 @@ Future flow:
 Connect → Share contact → Connected
 ```
 
-Use cases:
-
-```txt
-expo lead capture
-vendor booth scans
-business card replacement
-market/conference relationship capture
-```
-
-Handshake is core and important, but not fully implemented yet.
-
 ### Remember
-
-Remember means:
 
 ```txt
 “Remember this for next time.”
@@ -715,21 +683,9 @@ Future flow:
 Connect → Save preference → Retrieve/update later
 ```
 
-Use cases:
-
-```txt
-save my haircut
-save my bike specs
-save my usual order
-save grooming notes
-save product preferences
-```
-
-Remember is core, but not fully implemented yet.
-
 ---
 
-## What Is Out of Scope Right Now
+## Out of Scope Right Now
 
 Do not add unless explicitly requested:
 
@@ -739,7 +695,6 @@ admin panel
 heavy authentication
 server-side app framework
 Vercel server functions
-service intake workflow
 direct ordering archetype
 passport-progress archetype
 dark mode for Claim
@@ -749,8 +704,6 @@ complex CRM integration
 QR ordering is currently just a State 3 link, not a separate archetype.
 
 WinePassport is not a separate archetype unless it adds multi-stop passport/check-in progress. Simple “claim upgrade” belongs under Claim.
-
-Service intake may be supported later, but it is not core right now.
 
 ---
 
@@ -764,41 +717,11 @@ lukebrush555-hue/qr-intake-system
 
 Useful for historical context only.
 
-Do not migrate these into the clean repo:
-
-```txt
-templates/samplepass-claim/
-configs/samplepass-demo.js
-old visual experiments
-old branches
-old prototype notes
-old dark-mode attempts
-SamplePass as top-level product identity
-```
-
-Exception:
-
-```txt
-The approved visual implementation from templates/samplepass-v1/ and assets/css/ropebridge/ was intentionally migrated into ropebridge-core after the first clean implementation looked wrong.
-```
-
-The old repo helped discover the working flow and visual direction, but `ropebridge-core` is the new foundation.
+Do not migrate old prototype routes, dark-mode attempts, SamplePass-as-platform naming, or obsolete configs into `ropebridge-core`.
 
 ---
 
 ## Current Known Issues / Things To Check
-
-Current Claim route:
-
-```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/
-```
-
-Current create route:
-
-```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/
-```
 
 If Chrome Android makes the page look tiny, check:
 
@@ -806,16 +729,16 @@ If Chrome Android makes the page look tiny, check:
 Chrome menu → Desktop site
 ```
 
-Desktop Site being enabled caused a false mobile-layout problem earlier.
-
 Potential next work:
 
 ```txt
-1. Test Create → upload image → generated Claim page → QR download on phone.
-2. Confirm public.interactions inserts land in Supabase from several test vendors.
-3. Verify State 3 links and Connected screen.
-4. Do light security hardening after MVP testing.
-5. Build Handshake after Claim/create is stable.
+1. Test Create → upload image → preview → submit for approval on phone.
+2. Decide whether Submit for approval should insert into public.claim_submissions or stay manual/copied-link for now.
+3. Build a separate admin approval/redirect/shortener layer after Create is stable.
+4. Confirm public.interactions inserts land in Supabase from several Claim test vendors.
+5. Verify State 3 links and Connected screen.
+6. Do light security hardening after MVP testing.
+7. Build Handshake after Claim/Create is stable.
 ```
 
 ---
@@ -836,10 +759,10 @@ Claim header: recognition line + vendor name + 76px top-right seal
 Claim typography: vendor 34px serif; offer title 22px serif; recognition line 14px sans
 Create mirrors Claim with editable vendor name and editable Claim-style card
 Create image upload happens by tapping the image card, not a separate field
-Create QR tools include Preview page, Copy link + Download QR code, and Open full page
+Create uses true placeholder text
+Create uses Preview page → Submit for approval
 Create inline preview refreshes while editing
-restored approved card-based Claim layout
-fill-in-the-blank create-page concept
+long draft URL fallback remains stable
 public.interactions table model
 browser insert-only posture for database rows
 static-first implementation unless explicitly changed
@@ -858,6 +781,8 @@ replace the approved wax seal asset with line art or a different generated mark
 replace the approved card-based layout with a stripped-down direct image/title layout
 rebuild the create page into a traditional form
 auto-readd category or separate image upload fields to Create
+show QR/export tools before approval
+reintroduce browser-side JSON config saving without explicit approval
 add dashboard/auth/server complexity without explicit approval
 ```
 
