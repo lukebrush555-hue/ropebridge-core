@@ -35,6 +35,40 @@
     return text(document.querySelector('[data-field="' + name + '"]'));
   }
 
+  function selectElementText(element) {
+    if (!element || !document.createRange || !window.getSelection) return;
+
+    const range = document.createRange();
+    range.selectNodeContents(element);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function installReplaceOnFirstType(element) {
+    if (!element) return;
+
+    element.dataset.selectOnFocus = 'true';
+
+    element.addEventListener('focus', function () {
+      if (element.dataset.selectOnFocus !== 'true') return;
+      window.setTimeout(function () {
+        selectElementText(element);
+      }, 0);
+    });
+
+    element.addEventListener('pointerup', function (event) {
+      if (element.dataset.selectOnFocus !== 'true') return;
+      event.preventDefault();
+      selectElementText(element);
+    });
+
+    element.addEventListener('input', function () {
+      element.dataset.selectOnFocus = 'false';
+    }, { once: true });
+  }
+
   function claimUrl() {
     const url = new URL(window.location.href);
     url.pathname = url.pathname.replace('/create/', '/');
@@ -197,9 +231,11 @@
   }
 
   editable.forEach(function (node) {
+    installReplaceOnFirstType(node);
     node.addEventListener('input', update);
   });
 
+  installReplaceOnFirstType(vendorName);
   vendorName.addEventListener('input', update);
   previewToggle.addEventListener('click', toggleInlinePreview);
 
