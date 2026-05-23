@@ -10,14 +10,6 @@
     <link rel="stylesheet" href="../../../assets/css/ropebridge/components.css" />
     <link rel="stylesheet" href="../../../assets/css/ropebridge/states.css" />
     <style>
-      .rb-create-note {
-        margin: 0 0 18px;
-        color: rgba(63,63,59,0.62);
-        font-size: 14px;
-        line-height: 1.45;
-        text-align: center;
-      }
-
       .rb-editable {
         border-radius: 10px;
         cursor: text;
@@ -30,34 +22,44 @@
         background: rgba(255,250,242,0.72);
       }
 
+      .rb-upload-target {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .rb-upload-target:focus-visible {
+        outline: none;
+        box-shadow: var(--rb-shadow-focus);
+      }
+
+      .rb-upload-target::after {
+        content: "Tap to upload image";
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        border-radius: 999px;
+        background: rgba(255, 253, 248, 0.88);
+        color: rgba(20,36,22,0.72);
+        padding: 7px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        box-shadow: 0 6px 18px rgba(43,35,22,0.12);
+      }
+
+      .rb-visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
       .rb-create-tools {
         display: grid;
         gap: 12px;
         margin-top: 18px;
-      }
-
-      .rb-create-field {
-        display: grid;
-        gap: 7px;
-      }
-
-      .rb-create-field label {
-        color: rgba(20,36,22,0.68);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .rb-create-field input {
-        width: 100%;
-        min-height: 46px;
-        border: 1px solid rgba(20,36,22,0.14);
-        border-radius: 14px;
-        background: rgba(255,250,242,0.82);
-        color: var(--rb-text-primary);
-        padding: 10px 12px;
-        font-size: 15px;
       }
 
       .rb-output-card {
@@ -66,8 +68,14 @@
         text-align: center;
       }
 
+      .rb-output-actions {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
       .rb-output-link {
-        display: none;
+        display: inline-grid;
       }
 
       .rb-qr-box {
@@ -90,17 +98,20 @@
   <body>
     <main class="rb-flow-page">
       <div class="rb-flow-shell">
-        <header class="rb-logo-header">
-          <div class="rb-seal" aria-hidden="true"></div>
-        </header>
-
-        <p class="rb-create-note">Tap the sample page text and fill in the blanks. The preview link and QR update immediately.</p>
-
         <section class="rb-screen-state is-active" aria-labelledby="offer-title">
-          <section class="rb-card rb-flow-card rb-offer-card">
-            <div class="rb-image-container">
-              <img id="offer-image" src="../../../assets/images/claim-image-arriving-soon.svg" alt="Your image is arriving shortly" />
+          <header class="rb-claim-header">
+            <div class="rb-claim-heading">
+              <p class="rb-recognition-banner is-visible">Tap the sample page text and fill in the blanks. The preview link and QR update immediately.</p>
+              <h1 id="vendor-name" class="rb-claim-vendor rb-editable" contenteditable="true">Backyard Blooms</h1>
             </div>
+            <div class="rb-corner-seal" aria-hidden="true"></div>
+          </header>
+
+          <section class="rb-card rb-flow-card rb-offer-card">
+            <button id="image-upload-button" class="rb-image-container rb-upload-target" type="button" aria-label="Upload offer image">
+              <img id="offer-image" src="../../../assets/images/claim-image-arriving-soon.svg" alt="Your image is arriving shortly" />
+            </button>
+            <input id="image-upload" class="rb-visually-hidden" type="file" accept="image/*" />
 
             <div class="rb-offer-copy">
               <h1 id="offer-title" class="rb-offer-title rb-editable" contenteditable="true" data-field="title">Wildflower Raw Honey</h1>
@@ -108,29 +119,16 @@
             </div>
 
             <button id="cta-preview" class="rb-button rb-editable" type="button" contenteditable="true" data-field="cta">Claim sample</button>
-            <p class="rb-limit-note rb-editable" contenteditable="true" data-field="limitNote">One claim per person, per day.</p>
-
-            <div class="rb-create-tools" aria-label="Vendor details">
-              <div class="rb-create-field">
-                <label for="vendor-name">Business name</label>
-                <input id="vendor-name" value="Backyard Blooms" />
-              </div>
-              <div class="rb-create-field">
-                <label for="vendor-category">Category</label>
-                <input id="vendor-category" value="Raw Honey" />
-              </div>
-              <div class="rb-create-field">
-                <label for="image-upload">Upload image</label>
-                <input id="image-upload" type="file" accept="image/*" />
-              </div>
-            </div>
+            <p class="rb-limit-note" data-field="limitNote">One claim per person, per day.</p>
           </section>
 
           <section class="rb-card rb-output-card" aria-labelledby="output-title">
             <p id="output-title" class="rb-section-label">Scan to preview</p>
-            <a id="preview-link" class="rb-output-link" href="#" target="_blank" rel="noreferrer">Preview link</a>
             <div id="qr-code" class="rb-qr-box" aria-label="QR code for generated claim page"></div>
-            <button id="copy-link" class="rb-button rb-small-button" type="button">Copy link</button>
+            <div class="rb-output-actions">
+              <a id="preview-link" class="rb-button rb-small-button rb-output-link" href="#" target="_blank" rel="noreferrer">Open preview</a>
+              <button id="copy-link" class="rb-button rb-small-button" type="button">Copy link + Download QR code</button>
+            </div>
             <p id="copy-status" class="rb-status" role="status" aria-live="polite"></p>
           </section>
 
