@@ -49,8 +49,8 @@ Current status:
 
 ```txt
 Claim page visual design is complete and approved.
-Claim create page exists and works as the fill-in-the-blank generator.
-Create-page image upload UI exists, but hosted Supabase Storage upload wiring is still the next implementation task.
+Claim create page is now aligned with Claim and works as a fill-in-the-blank generator.
+Create page supports hosted Supabase Storage image upload, QR generation, one-tap copy+QR download, and inline preview.
 ```
 
 ---
@@ -78,7 +78,7 @@ https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/
 Current latest cache-busted test URL:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/?v=offer-title-22
+https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/?v=inline-preview-1
 ```
 
 Current structure:
@@ -293,6 +293,84 @@ archetypes/claim/app.js
 
 ---
 
+## Approved Claim Create Page — CURRENT
+
+Create is now intended to mirror the Claim output rather than feel like a detached form.
+
+Approved create-page layout:
+
+```txt
+[Instruction text]                         [wax seal]
+
+[Editable vendor business name]
+
+[Claim-style card]
+  [tap image area to upload/replace image]
+  [editable offer title at 22px]
+  [editable description]
+  [editable CTA]
+  [noneditable limit note]
+
+[QR preview + actions]
+
+[inline preview panel]
+```
+
+Approved create-page behavior:
+
+```txt
+Vendor name is editable directly in the header.
+Category field is removed from the visible UI.
+The separate visible upload image field is removed.
+The image card itself is the upload target.
+A subtle “Tap to upload image” overlay explains the image action.
+Limit note is not editable in the create UI.
+Image upload validates file type and size.
+Image upload stores the selected image in Supabase Storage bucket ropebridge-offer-images.
+Generated Claim URL receives the hosted public image URL in ?image=.
+QR code updates immediately after edits.
+```
+
+Approved QR/action section:
+
+```txt
+[QR code]
+
+[Preview page]
+[Copy link + Download QR code]
+[Open full page]
+```
+
+Behavior:
+
+```txt
+Preview page opens an inline iframe preview below the QR tools.
+Button changes to Hide preview while open.
+Inline preview refreshes automatically as edits change.
+Open full page remains as a secondary full-page test link.
+Copy link + Download QR code is one action:
+  - copies the generated Claim URL
+  - downloads the QR code PNG
+```
+
+Current create-page files:
+
+```txt
+archetypes/claim/create/index.html
+archetypes/claim/create/create.js
+```
+
+Recent create-page commits:
+
+```txt
+1ef6283  Align create page with approved Claim layout
+31f8ffb  Add tap-image upload and QR download action
+35e3d45  Add inline preview panel to create page
+c7b580a  Wire inline preview refresh on create page
+```
+
+---
+
 ## Approved State Branding Rules
 
 Current approved state branding:
@@ -309,6 +387,11 @@ Connected:
 small RopeBridge wax seal at top right
 simple connected card + useful links
 powered-by text remains quiet
+
+Create:
+instruction line + editable vendor name on the left
+small RopeBridge wax seal at top right
+Claim-style editable card
 ```
 
 Do not re-add:
@@ -321,6 +404,8 @@ large centered seal on Claim
 large centered seal on Connected
 dark app theme
 automatic dark-mode styling
+separate visible upload-image field on Create
+category field on Create
 ```
 
 ---
@@ -347,79 +432,6 @@ Important theme rule:
 Force the approved light cream / olive / brass RopeBridge theme regardless of device dark-mode settings.
 Do not add automatic prefers-color-scheme dark styling for the active Claim flow.
 ```
-
----
-
-## Claim Create Page / Vendor Image Upload Status
-
-The Claim archetype has a vendor-facing create page:
-
-```txt
-/archetypes/claim/create/
-```
-
-Files:
-
-```txt
-archetypes/claim/create/index.html
-archetypes/claim/create/create.js
-```
-
-Purpose:
-
-```txt
-Let a vendor fill in the Claim page visually, like fill-in-the-blank, then immediately get a generated Claim URL and QR code.
-```
-
-Current create-page behavior:
-
-```txt
-Editable offer title
-Editable description
-Editable CTA button text
-Editable limit note
-Vendor name field
-Vendor category field
-QR code generation
-Copy generated link
-Image upload field exists
-```
-
-The create page has the correct centered wax seal size. The Claim page top-right seal was matched to that size.
-
-Important current limitation:
-
-```txt
-The image upload currently previews locally only.
-It uses URL.createObjectURL(file).
-That means the creator sees the image on their device, but the generated QR/link still uses the placeholder image.
-```
-
-The main Claim page already supports image URLs through query params:
-
-```txt
-?image=
-?image_alt=
-```
-
-Needed next implementation:
-
-```txt
-Update archetypes/claim/create/create.js so imageUpload change:
-1. validates image file type and max size
-2. uploads file to Supabase Storage bucket ropebridge-offer-images
-3. gets the public image URL
-4. stores that URL in memory
-5. regenerates the Claim URL with ?image=<public URL>
-6. regenerates the QR code using that updated URL
-7. shows a clear success/error status
-```
-
-Do not rebuild the create page.
-Do not add a dashboard or admin panel.
-Do not add heavy auth yet.
-Do not move this to Vercel/server functions unless explicitly requested.
-This can remain static-first using Supabase Storage + anon upload policy for the MVP.
 
 ---
 
@@ -662,7 +674,7 @@ claim raffle entry
 claim event perk
 ```
 
-Claim visual design is complete. The remaining near-term Claim-related work is create-page hosted image upload.
+Claim and Create visual/design flow are complete enough for testing. Future Claim work should focus on polish, vendor testing, and security hardening rather than redesign.
 
 ### Handshake
 
@@ -799,12 +811,11 @@ Desktop Site being enabled caused a false mobile-layout problem earlier.
 Potential next work:
 
 ```txt
-1. Replace local-only image preview with Supabase Storage upload in create.js.
-2. Confirm generated QR code uses the uploaded public image URL.
-3. Test Claim flow against public.interactions.
-4. Confirm inserts land in Supabase.
-5. Verify State 3 links and Connected screen.
-6. Build Handshake after Claim/create image upload is stable.
+1. Test Create → upload image → generated Claim page → QR download on phone.
+2. Confirm public.interactions inserts land in Supabase from several test vendors.
+3. Verify State 3 links and Connected screen.
+4. Do light security hardening after MVP testing.
+5. Build Handshake after Claim/create is stable.
 ```
 
 ---
@@ -823,6 +834,10 @@ cream / olive / brass visual direction
 approved wax seal asset at assets/images/ropebridge-wax-seal.svg
 Claim header: recognition line + vendor name + 76px top-right seal
 Claim typography: vendor 34px serif; offer title 22px serif; recognition line 14px sans
+Create mirrors Claim with editable vendor name and editable Claim-style card
+Create image upload happens by tapping the image card, not a separate field
+Create QR tools include Preview page, Copy link + Download QR code, and Open full page
+Create inline preview refreshes while editing
 restored approved card-based Claim layout
 fill-in-the-blank create-page concept
 public.interactions table model
@@ -841,7 +856,8 @@ rename old lead_requests table
 break the working state flow
 replace the approved wax seal asset with line art or a different generated mark
 replace the approved card-based layout with a stripped-down direct image/title layout
-rebuild the create page when it only needs image-storage wiring
+rebuild the create page into a traditional form
+auto-readd category or separate image upload fields to Create
 add dashboard/auth/server complexity without explicit approval
 ```
 
