@@ -41,10 +41,10 @@
   margin: 0;
   color: var(--rb-text-primary);
   font-family: var(--rb-font-serif);
-  font-size: clamp(38px, 11vw, 54px);
+  font-size: 34px;
   font-weight: 600;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
 }
 
 .rb-offer-card {
@@ -61,7 +61,7 @@
   margin: 0;
   color: var(--rb-text-primary);
   font-family: var(--rb-font-serif);
-  font-size: 34px;
+  font-size: 28px;
   line-height: 1.04;
   font-weight: 600;
   letter-spacing: -0.02em;
