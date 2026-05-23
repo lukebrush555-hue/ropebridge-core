@@ -31,54 +31,7 @@ RopeBridge turns physical QR scans into remembered vendor/customer interactions.
 It is like Linktree for physical-world relationships, but action-based and recognition-aware.
 ```
 
----
-
-## Core Philosophy
-
-RopeBridge is not a generic SaaS dashboard, CMS, ecommerce app, or pile of unrelated landing pages.
-
-It is infrastructure for physical-to-digital interactions:
-
-```txt
-physical encounter
-→ QR scan
-→ lightweight identity handshake
-→ vendor-specific interaction
-→ persistent relationship continuity
-```
-
-Core operating principles:
-
-- QR-first
-- mobile-first
-- friction once
-- recognition continuity
-- browser remains untrusted
-- static-first implementation
-- reusable bones + explicit config
-- no heavy auth unless there is a clear need
-- no dashboard unless operational need proves it
-- premium physical-world UX over generic SaaS UI
-
----
-
-## Current Product Hierarchy
-
-Top-level product:
-
-```txt
-RopeBridge
-```
-
 Core archetypes:
-
-```txt
-RopeBridge Claim
-RopeBridge Handshake
-RopeBridge Remember
-```
-
-Definitions:
 
 ```txt
 Claim = “I want the thing.”
@@ -92,18 +45,17 @@ Current implemented archetype:
 Claim
 ```
 
-Future archetypes documented but not implemented yet:
+Current status:
 
 ```txt
-Handshake
-Remember
+Claim page visual design is complete and approved.
+Claim create page exists and works as the fill-in-the-blank generator.
+Create-page image upload UI exists, but hosted Supabase Storage upload wiring is still the next implementation task.
 ```
-
-SamplePass is no longer the top-level product. It is only an example/demo configuration of the Claim archetype.
 
 ---
 
-## Current Repo
+## Current Repo / Links
 
 Primary repo:
 
@@ -123,10 +75,10 @@ Current create-page URL:
 https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/
 ```
 
-Current known-good cache-busted test URL after restoring the approved visual migration:
+Current latest cache-busted test URL:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/?v=restored-approved-1
+https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/?v=offer-title-22
 ```
 
 Current structure:
@@ -150,7 +102,7 @@ ropebridge-core/
         components.css
         states.css
     images/
-      ropebridge-seal.svg
+      ropebridge-wax-seal.svg
       samplepass-stand.jpg
       claim-image-arriving-soon.svg
       markup_1000003500.jpg
@@ -189,49 +141,285 @@ GitHub Pages workflow exists:
 
 ---
 
-## Important Migration Correction
+## Core Philosophy
 
-Codex initially created a clean `ropebridge-core` Claim page, but it looked different from the approved old visual branch.
+RopeBridge is not a generic SaaS dashboard, CMS, ecommerce app, or pile of unrelated landing pages.
 
-The new implementation was too stripped down:
-
-```txt
-bare sections
-huge direct page title
-direct offer image
-missing tactile card structure
-less faithful to the approved cream/olive/brass mockup
-```
-
-The approved visual implementation was then migrated from the old repo into `ropebridge-core`.
-
-Restored into `ropebridge-core`:
+It is infrastructure for physical-to-digital interactions:
 
 ```txt
-approved SamplePass v1 structure
-wax seal only on the original Connect/sign-in state
-recognition banner
-card-based offer layout
-cream/olive/brass design tokens
-tactile CTA/card styling
-Connect → Claim → Connected flow
-ROPEBRIDGE_CONFIG compatibility
-public.interactions insert path
+physical encounter
+→ QR scan
+→ lightweight identity handshake
+→ vendor-specific interaction
+→ persistent relationship continuity
 ```
 
-Recent migration commits included:
+Core operating principles:
 
 ```txt
-0c0cc13  Restore approved Claim visual structure
-6c15042  Restore approved cream olive tokens
-bcb6b47  Restore approved mobile flow layout
-67d526c  Restore approved tactile component styling
-97d5787  Restore approved Claim state styling
-032a597  Align Claim demo config with approved structure
-fe760ad  Adapt Claim behavior to restored visual structure
+QR-first
+mobile-first
+friction once
+recognition continuity
+browser remains untrusted
+static-first implementation
+reusable bones + explicit config
+no heavy auth unless there is a clear need
+no dashboard unless operational need proves it
+premium physical-world UX over generic SaaS UI
 ```
 
-Future AI/Codex work should preserve the restored approved visual implementation, not the earlier stripped-down clean-room version.
+SamplePass is no longer the top-level product. It is only an example/demo configuration of the Claim archetype.
+
+---
+
+## Current Claim Flow
+
+The state flow is critical and must be preserved.
+
+Current behavior:
+
+```txt
+First-time visitor:
+Connect → Claim → Connected
+
+Returning visitor:
+skip Connect → Claim with recognition message → Connected
+```
+
+Detailed behavior:
+
+```txt
+1. User lands on page.
+2. App checks localStorage for remembered visitor keys.
+3. If no saved visitor exists, show Connect state.
+4. User enters first name + phone + consent.
+5. App saves visitor locally.
+6. App moves to Claim state.
+7. If saved visitor exists on later scan, app skips Connect.
+8. Returning visitor lands directly on Claim state.
+9. Recognition message appears, e.g. “Welcome back, Luke.”
+10. User taps Claim.
+11. App inserts one row into public.interactions.
+12. App moves to Connected state.
+```
+
+Current localStorage keys:
+
+```txt
+ropebridge-connected
+ropebridge-name
+ropebridge-phone
+```
+
+Do not break this flow when renaming, cleaning, or refactoring.
+
+---
+
+## Approved Claim Visual Design — COMPLETE
+
+Claim is visually approved as of 2026-05-23.
+
+Use this layout for the active Claim state:
+
+```txt
+top header:
+  left: recognition line, e.g. “Welcome back, Luke.”
+  below it: vendor business name, e.g. “Backyard Blooms”
+  right: RopeBridge wax seal, profile/menu-button style
+
+main card:
+  image inside tactile rounded card
+  offer title
+  description
+  CTA button
+  limit note
+
+footer:
+  powered by RopeBridge text
+```
+
+Approved typography and sizing:
+
+```txt
+Recognition line:
+  matches create-page note text
+  font-size: 14px
+  line-height: 1.45
+  font-family: var(--rb-font-sans)
+  color: rgba(63,63,59,0.62)
+
+Vendor business name:
+  uses same family/weight/spacing as the original offer headline
+  font-family: var(--rb-font-serif)
+  font-size: 34px
+  line-height: 1.04
+  font-weight: 600
+  letter-spacing: -0.02em
+  color: var(--rb-text-primary)
+
+RopeBridge corner seal:
+  76px × 76px
+  top right of Claim state
+  same visual size as create-page centered logo
+
+Offer title:
+  font-size: 22px
+  same serif family and weight
+```
+
+Approved logo asset:
+
+```txt
+assets/images/ropebridge-wax-seal.svg
+```
+
+Important: use the current approved raster-style wax seal asset. Do not replace it with a generated line-art/vector-only seal.
+
+Current Claim styling lives mainly in:
+
+```txt
+assets/css/ropebridge/components.css
+assets/css/ropebridge/states.css
+```
+
+Current Claim structure lives in:
+
+```txt
+archetypes/claim/index.html
+archetypes/claim/app.js
+```
+
+---
+
+## Approved State Branding Rules
+
+Current approved state branding:
+
+```txt
+Connect / sign-in:
+centered RopeBridge wax seal above the Connect card
+
+Claim:
+recognition line + vendor name on the left
+small RopeBridge wax seal at top right
+
+Connected:
+small RopeBridge wax seal at top right
+simple connected card + useful links
+powered-by text remains quiet
+```
+
+Do not re-add:
+
+```txt
+top vendor subtitle
+Raw Honey top subtitle
+SAMPLEPASS eyebrow
+large centered seal on Claim
+large centered seal on Connected
+dark app theme
+automatic dark-mode styling
+```
+
+---
+
+## Approved Visual Direction
+
+The approved visual direction is:
+
+```txt
+cream / olive / brass
+premium artisan
+quiet
+physical-world
+boutique packaging
+heritage object
+not generic SaaS
+not dark dashboard
+not QR tool UI
+```
+
+Important theme rule:
+
+```txt
+Force the approved light cream / olive / brass RopeBridge theme regardless of device dark-mode settings.
+Do not add automatic prefers-color-scheme dark styling for the active Claim flow.
+```
+
+---
+
+## Claim Create Page / Vendor Image Upload Status
+
+The Claim archetype has a vendor-facing create page:
+
+```txt
+/archetypes/claim/create/
+```
+
+Files:
+
+```txt
+archetypes/claim/create/index.html
+archetypes/claim/create/create.js
+```
+
+Purpose:
+
+```txt
+Let a vendor fill in the Claim page visually, like fill-in-the-blank, then immediately get a generated Claim URL and QR code.
+```
+
+Current create-page behavior:
+
+```txt
+Editable offer title
+Editable description
+Editable CTA button text
+Editable limit note
+Vendor name field
+Vendor category field
+QR code generation
+Copy generated link
+Image upload field exists
+```
+
+The create page has the correct centered wax seal size. The Claim page top-right seal was matched to that size.
+
+Important current limitation:
+
+```txt
+The image upload currently previews locally only.
+It uses URL.createObjectURL(file).
+That means the creator sees the image on their device, but the generated QR/link still uses the placeholder image.
+```
+
+The main Claim page already supports image URLs through query params:
+
+```txt
+?image=
+?image_alt=
+```
+
+Needed next implementation:
+
+```txt
+Update archetypes/claim/create/create.js so imageUpload change:
+1. validates image file type and max size
+2. uploads file to Supabase Storage bucket ropebridge-offer-images
+3. gets the public image URL
+4. stores that URL in memory
+5. regenerates the Claim URL with ?image=<public URL>
+6. regenerates the QR code using that updated URL
+7. shows a clear success/error status
+```
+
+Do not rebuild the create page.
+Do not add a dashboard or admin panel.
+Do not add heavy auth yet.
+Do not move this to Vercel/server functions unless explicitly requested.
+This can remain static-first using Supabase Storage + anon upload policy for the MVP.
 
 ---
 
@@ -266,8 +454,6 @@ Current intended split:
 old qr-intake-system repo → public.lead_requests
 new ropebridge-core repo → public.interactions
 ```
-
-### `public.interactions` status
 
 `public.interactions` exists and has:
 
@@ -398,227 +584,6 @@ SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 
 Do not put real secrets in `.env.example`.
 
-Public insert/upload endpoint spam is a known MVP risk. Future hardening may include:
-
-```txt
-rate limits
-CAPTCHA
-edge functions
-stricter allowlists
-server-side validation
-```
-
----
-
-## Current Claim Flow
-
-The state flow is critical and must be preserved.
-
-Current behavior:
-
-```txt
-First-time visitor:
-Connect → Claim → Connected
-
-Returning visitor:
-skip Connect → Claim with recognition message → Connected
-```
-
-Detailed behavior:
-
-```txt
-1. User lands on page.
-2. App checks localStorage for remembered visitor keys.
-3. If no saved visitor exists, show Connect state.
-4. User enters first name + phone + consent.
-5. App saves visitor locally.
-6. App moves to Claim state.
-7. If saved visitor exists on later scan, app skips Connect.
-8. Returning visitor lands directly on Claim state.
-9. Recognition message appears, e.g. “Welcome back, Luke.”
-10. User taps Claim.
-11. App inserts one row into public.interactions.
-12. App moves to Connected state.
-```
-
-Current localStorage keys:
-
-```txt
-ropebridge-connected
-ropebridge-name
-ropebridge-phone
-```
-
-Do not break this flow when renaming, cleaning, or refactoring.
-
----
-
-## Approved State Branding Rules
-
-The wax seal/logo appears only on the original Connect/sign-in state.
-
-State branding should follow this model:
-
-```txt
-Connect / sign-in:
-wax seal allowed
-
-Claim:
-no wax seal
-recognition banner if remembered
-image inside tactile card
-offer title
-description
-CTA button
-limit note
-
-Connected:
-no wax seal
-simple powered-by / useful links only
-```
-
-The active Claim screen should use the restored `.rb-card rb-flow-card rb-offer-card` structure, not the stripped-down direct-page image/title layout.
-
-Do not re-add:
-
-```txt
-top vendor text
-Raw Honey top subtitle
-SAMPLEPASS eyebrow
-dark app theme
-automatic dark-mode styling
-wax seal on Claim state
-wax seal on Connected state
-```
-
-RopeBridge branding outside Connect/sign-in should remain quiet and text-only unless explicitly changed.
-
----
-
-## Claim Create Page / Vendor Image Upload Status
-
-The Claim archetype has a vendor-facing create page:
-
-```txt
-/archetypes/claim/create/
-```
-
-Files:
-
-```txt
-archetypes/claim/create/index.html
-archetypes/claim/create/create.js
-```
-
-Purpose:
-
-```txt
-Let a vendor fill in the Claim page visually, like fill-in-the-blank, then immediately get a generated Claim URL and QR code.
-```
-
-Current create-page behavior:
-
-```txt
-Editable offer title
-Editable description
-Editable CTA button text
-Editable limit note
-Vendor name field
-Vendor category field
-QR code generation
-Copy generated link
-Image upload field exists
-```
-
-Important current limitation:
-
-```txt
-The image upload currently previews locally only.
-It uses URL.createObjectURL(file).
-That means the creator sees the image on their device, but the generated QR/link still uses the placeholder image.
-```
-
-Current placeholder image behavior:
-
-```txt
-Generated Claim links use:
-../../../assets/images/claim-image-arriving-soon.svg
-```
-
-Do not confuse local image preview with real hosted image upload.
-
-The main Claim page already supports image URLs through query params:
-
-```txt
-?image=
-?image_alt=
-```
-
-So the main Claim page does not need a major refactor for vendor images. The create page needs to upload the selected image and place the resulting public image URL into the generated Claim URL.
-
-Needed next implementation:
-
-```txt
-Update archetypes/claim/create/create.js so imageUpload change:
-1. validates image file type and max size
-2. uploads file to Supabase Storage bucket ropebridge-offer-images
-3. gets the public image URL
-4. stores that URL in memory
-5. regenerates the Claim URL with ?image=<public URL>
-6. regenerates the QR code using that updated URL
-7. shows a clear success/error status
-```
-
-Do not rebuild the create page.
-Do not add a second upload field.
-Do not add a dashboard or admin panel.
-Do not add heavy auth yet.
-Do not move this to Vercel/server functions unless explicitly requested.
-This can remain static-first using Supabase Storage + anon upload policy for the MVP.
-
-Implementation warning:
-
-```txt
-The create page lives under /archetypes/claim/create/.
-Relative asset paths from create.js must account for that route depth.
-The generated Claim URL should replace /create/ with /.
-```
-
-Current diagnosis:
-
-```txt
-The problem is not “add an upload field.”
-The upload field already exists.
-The problem is “turn local preview upload into hosted Supabase Storage upload and inject the hosted URL into the generated QR link.”
-```
-
----
-
-## Approved Visual Direction
-
-The approved visual direction is:
-
-```txt
-cream / olive / brass
-premium artisan
-quiet
-physical-world
-boutique packaging
-heritage object
-not generic SaaS
-not dark dashboard
-not QR tool UI
-```
-
-Important theme rule:
-
-```txt
-Force the approved light cream / olive / brass RopeBridge theme regardless of device dark-mode settings.
-Do not add automatic prefers-color-scheme dark styling for the active Claim flow.
-```
-
-The previous dark mode look was rejected.
-
 ---
 
 ## Claim Config Model
@@ -697,7 +662,7 @@ claim raffle entry
 claim event perk
 ```
 
-Current implemented archetype.
+Claim visual design is complete. The remaining near-term Claim-related work is create-page hosted image upload.
 
 ### Handshake
 
@@ -811,12 +776,6 @@ The old repo helped discover the working flow and visual direction, but `ropebri
 
 ## Current Known Issues / Things To Check
 
-Check GitHub Pages deployment:
-
-```txt
-Actions tab → Deploy static site to GitHub Pages
-```
-
 Current Claim route:
 
 ```txt
@@ -840,15 +799,12 @@ Desktop Site being enabled caused a false mobile-layout problem earlier.
 Potential next work:
 
 ```txt
-1. Verify GitHub Pages deployment shows the restored approved Claim layout.
-2. Verify /archetypes/claim/create/ loads on mobile.
-3. Replace local-only image preview with Supabase Storage upload in create.js.
-4. Confirm generated QR code uses the uploaded public image URL.
-5. Test Claim flow against public.interactions.
-6. Confirm inserts land in Supabase.
-7. Inspect visual fidelity on mobile.
-8. Verify State 3 links and Connected screen.
-9. Build Handshake after Claim is stable.
+1. Replace local-only image preview with Supabase Storage upload in create.js.
+2. Confirm generated QR code uses the uploaded public image URL.
+3. Test Claim flow against public.interactions.
+4. Confirm inserts land in Supabase.
+5. Verify State 3 links and Connected screen.
+6. Build Handshake after Claim/create image upload is stable.
 ```
 
 ---
@@ -864,7 +820,9 @@ Connect → Claim → Connected state flow
 returning visitor skip-Connect behavior
 localStorage recognition behavior
 cream / olive / brass visual direction
-wax seal only on the original Connect/sign-in state
+approved wax seal asset at assets/images/ropebridge-wax-seal.svg
+Claim header: recognition line + vendor name + 76px top-right seal
+Claim typography: vendor 34px serif; offer title 22px serif; recognition line 14px sans
 restored approved card-based Claim layout
 fill-in-the-blank create-page concept
 public.interactions table model
@@ -881,7 +839,7 @@ reintroduce SamplePass as platform name
 copy old prototype routes
 rename old lead_requests table
 break the working state flow
-place the wax seal on Claim or Connected states
+replace the approved wax seal asset with line art or a different generated mark
 replace the approved card-based layout with a stripped-down direct image/title layout
 rebuild the create page when it only needs image-storage wiring
 add dashboard/auth/server complexity without explicit approval
