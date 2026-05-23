@@ -36,7 +36,7 @@
 
                 <div class="rb-field">
                   <label for="connect-phone">Phone</label>
-                  <input id="connect-phone" class="rb-input" name="phone" type="tel" autocomplete="tel" inputmode="tel" required />
+                  <input id="connect-phone" class="rb-input" name="phone" type="tel" autocomplete="tel" inputmode="numeric" maxlength="14" placeholder="(555) 123-4567" required />
                 </div>
               </div>
 
@@ -48,10 +48,6 @@
                 <label class="rb-check-row">
                   <input type="checkbox" required />
                   <span>I consent to use this phone number for recognition when I scan again.</span>
-                </label>
-                <label class="rb-check-row">
-                  <input type="checkbox" required />
-                  <span>I’d like to receive offers, samples, and updates from participating vendors.</span>
                 </label>
               </div>
 
@@ -128,6 +124,6 @@
     </main>
 
     <script src="../../configs/examples/claim-samplepass-demo-local.js"></script>
-    <script src="./app.js"></script>
+    <script src="./app.js?v=phone-format-1"></script>
   </body>
 </html>
