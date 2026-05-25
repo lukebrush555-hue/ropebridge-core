@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>RopeBridge QR Link</title>
+    <link rel="stylesheet" href="../assets/css/ropebridge/tokens.css" />
+    <link rel="stylesheet" href="../assets/css/ropebridge/base.css" />
+    <link rel="stylesheet" href="../assets/css/ropebridge/components.css" />
+    <link rel="stylesheet" href="../assets/css/ropebridge/states.css" />
+  </head>
+  <body>
+    <main class="rb-flow-page">
+      <div class="rb-flow-shell">
+        <section class="rb-screen-state is-active">
+          <header class="rb-logo-header">
+            <div class="rb-seal" aria-hidden="true"></div>
+          </header>
+
+          <section class="rb-card rb-flow-card rb-connect-card">
+            <p class="rb-eyebrow">RopeBridge</p>
+            <h1 id="go-title" class="rb-title">QR code active.</h1>
+            <p id="go-body" class="rb-body">
+              This SamplePass page is being prepared.
+            </p>
+            <div class="rb-action-stack">
+              <a id="go-link" class="rb-button" href="../archetypes/claim/">Open SamplePass</a>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <script src="./registry.js"></script>
+    <script>
+      (function () {
+        const registry = window.ROPEBRIDGE_GO_REGISTRY || {};
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const code = pathParts[pathParts.length - 1] === 'go' ? '' : pathParts[pathParts.length - 1];
+        const entry = registry[code];
+        const title = document.querySelector('#go-title');
+        const body = document.querySelector('#go-body');
+        const link = document.querySelector('#go-link');
+
+        if (!code) {
+          title.textContent = 'SamplePass QR registry';
+          body.textContent = 'Choose a QR code URL such as /go/svfmpa-sp-001.';
+          link.remove();
+          return;
+        }
+
+        if (!entry) {
+          title.textContent = 'QR code active.';
+          body.textContent = 'This SamplePass QR code exists, but it has not been assigned yet.';
+          link.href = '../archetypes/claim/';
+          link.textContent = 'Open demo page';
+          return;
+        }
+
+        if (entry.status === 'live' && entry.destination) {
+          window.location.replace(entry.destination);
+          return;
+        }
+
+        title.textContent = entry.vendorName || 'QR code active.';
+        body.textContent = entry.offerTitle
+          ? entry.offerTitle + ' is being prepared for ' + (entry.location || 'this market') + '.'
+          : 'This SamplePass page is being prepared.';
+        link.href = entry.destination || '../archetypes/claim/';
+        link.textContent = 'Open page';
+      })();
+    </script>
+  </body>
+</html>
