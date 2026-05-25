@@ -36,8 +36,10 @@
     <script>
       (function () {
         const registry = window.ROPEBRIDGE_GO_REGISTRY || {};
+        const params = new URLSearchParams(window.location.search);
         const pathParts = window.location.pathname.split('/').filter(Boolean);
-        const code = pathParts[pathParts.length - 1] === 'go' ? '' : pathParts[pathParts.length - 1];
+        const lastPart = pathParts[pathParts.length - 1];
+        const code = params.get('code') || (lastPart === 'go' ? '' : lastPart);
         const entry = registry[code];
         const title = document.querySelector('#go-title');
         const body = document.querySelector('#go-body');
