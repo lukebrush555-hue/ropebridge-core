@@ -49,7 +49,7 @@ window.ROPEBRIDGE_GO_REGISTRY = {
     vendorType: "bakery",
     vendorName: "Crumb & Hearth",
     offerTitle: "Sourdough Sample",
-    destination: "/ropebridge-core/archetypes/claim/?vendor=Crumb%20%26%20Hearth&vendor_id=crumb-and-hearth&category=Bakery&title=Sourdough%20Sample&description=Claim%20a%20bite%20of%20slow-fermented%20market%20sourdough%20and%20save%20the%20bakery%20for%20future%20loaves.&cta=Claim%20sourdough%20bite&limit=One%20sample%20per%20person%2C%20per%20market%20day.&qr=svfmpa-sp-004&campaign=svfmpa-crumb-and-hearth&image=/ropebridge-core/assets/images/claim-image-arriving-soon.svg&image_alt=Crumb%20and%20Hearth%20sample%20image%20placeholder"
+    destination: "/ropebridge-core/archetypes/claim/?vendor=Crumb%20%26%20Hearth&vendor_id=crumb-and-hearth&category=Bakery&title=Sourdough%20Sample&description=Claim%20a%20bite%20of%20slow-fermented%20market%20sourdough%20and%20save%20the%20bakery%20for%20future%20loaves.&cta=Claim%20sourdough%20bite&limit=One%20sample%20per%20person%2C%20per%20market%20day.&qr=svfmpa-sp-004&campaign=svfmpa-crumb-and-hearth&image=/ropebridge-core/assets/images/faux-vendors/crumb-and-hearth.png&image_alt=Crumb%20and%20Hearth%20sourdough%20sample"
   },
   "svfmpa-sp-005": {
     status: "live",
