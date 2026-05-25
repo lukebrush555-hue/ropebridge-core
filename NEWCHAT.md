@@ -1,6 +1,6 @@
 # RopeBridge New Chat Startup
 
-_Last updated: 2026-05-23_
+_Last updated: 2026-05-25_
 
 ## Start Here
 
@@ -53,6 +53,7 @@ Claim Create page mirrors Claim and works as a fill-in-the-blank generator.
 Create uses true placeholder text, tap-image upload, inline preview, and a submit-for-approval workflow.
 QR/link download tools were removed from the visible Create flow for now.
 Short-link JSON config storage is paused; long draft URLs are the stable fallback.
+A static /go/ QR URL template layer has started so physical QR codes can be printed before final destinations exist.
 ```
 
 ---
@@ -71,10 +72,152 @@ Create page:
 https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/
 ```
 
+QR registry/root route:
+
+```txt
+https://lukebrush555-hue.github.io/ropebridge-core/go/
+```
+
+Important:
+
+```txt
+/go/ is the registry/root/debug page.
+Do not print /go/ itself on a QR stand.
+Print only specific child URLs such as /go/svfmpa-sp-001/.
+```
+
 Latest Create test URL:
 
 ```txt
 https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/?v=approval-flow-1
+```
+
+---
+
+## Physical QR URL Template System
+
+RopeBridge now uses short, stable physical QR URLs that can exist before the final page is finished.
+
+Pattern:
+
+```txt
+/go/{location}-{product-or-wrapper}-{number}/
+```
+
+Example:
+
+```txt
+/go/svfmpa-sp-001/
+```
+
+Meaning:
+
+```txt
+svfmpa = Saucon Valley Farmers' Market
+sp     = SamplePass
+001    = physical QR asset number
+```
+
+The URL should identify the physical QR asset. Business logic and destination behavior should live in the registry or route, not in the printed URL.
+
+Current shorthand codes:
+
+```txt
+sp = SamplePass
+wp = WinePassport
+dl = DoneLoop
+hs = Handshake
+rm = Remember
+```
+
+Important distinction:
+
+```txt
+sp / wp / dl describe the product wrapper or sales concept.
+claim / handshake / remember describe the underlying RopeBridge archetype.
+WinePassport may still use the Claim archetype if it is simply “claim tasting upgrade / claim offer.”
+```
+
+Current registry file:
+
+```txt
+go/registry.js
+```
+
+Current router/root file:
+
+```txt
+go/index.html
+```
+
+Current live SamplePass QR routes created in repo:
+
+```txt
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-demo/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-onboard/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-001/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-002/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-003/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-004/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-005/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-006/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-007/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-008/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-009/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-010/
+```
+
+Current SamplePass faux vendor mapping:
+
+```txt
+svfmpa-sp-001 = Hollow Road Coffee — Cold Brew Tasting
+svfmpa-sp-002 = Backyard Blooms — Market Stem Token
+svfmpa-sp-003 = Saucon Valley Apiary — Wildflower Raw Honey
+svfmpa-sp-004 = Crumb & Hearth — Sourdough Sample
+svfmpa-sp-005 = Ember Jar Provisions — Three-Heat Tasting
+svfmpa-sp-006 = Stone Fence Preserves — Strawberry Rhubarb Jam
+svfmpa-sp-007 = Creekside Creamery — Aged Cheddar Bite
+svfmpa-sp-008 = Brine & Barrel — Garlic Dill Pickle Chip
+svfmpa-sp-009 = Willow Tallow & Soap — Mini Balm Sample
+svfmpa-sp-010 = Fieldnote Teas — Iced Mint Tea Tasting
+```
+
+Reserved print-list URL sets for physical QR codes:
+
+```txt
+SamplePass:
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-001/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-002/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-003/
+
+WinePassport:
+https://lukebrush555-hue.github.io/ropebridge-core/go/lv-wp-001/
+https://lukebrush555-hue.github.io/ropebridge-core/go/lv-wp-002/
+https://lukebrush555-hue.github.io/ropebridge-core/go/lv-wp-003/
+
+DoneLoop:
+https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-dl-001/
+https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-dl-002/
+https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-dl-003/
+
+Handshake:
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-hs-001/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-hs-002/
+https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-hs-003/
+
+Remember:
+https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-rm-001/
+https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-rm-002/
+https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-rm-003/
+```
+
+Caution:
+
+```txt
+SamplePass routes are created and wired.
+WinePassport route files lv-wp-001 and lv-wp-002 were started.
+Before relying on printed non-SamplePass QR codes in the field, verify the route files exist and open correctly.
+If a child route does not exist in a static GitHub Pages site, it may 404 even if the URL scheme is reserved.
 ```
 
 ---
@@ -118,6 +261,17 @@ ropebridge-core/
   configs/examples/
     claim-samplepass-demo.js
     claim-samplepass-demo-local.js
+
+  go/
+    index.html
+    registry.js
+    svfmpa-sp-demo/index.html
+    svfmpa-sp-onboard/index.html
+    svfmpa-sp-001/index.html
+    ...
+    svfmpa-sp-010/index.html
+    lv-wp-001/index.html
+    lv-wp-002/index.html
 
   supabase/
     schema.sql
@@ -225,27 +379,10 @@ footer:
 Approved typography and sizing:
 
 ```txt
-Recognition line:
-  font-size: 14px
-  line-height: 1.45
-  font-family: var(--rb-font-sans)
-  color: rgba(63,63,59,0.62)
-
-Vendor business name:
-  font-family: var(--rb-font-serif)
-  font-size: 34px
-  line-height: 1.04
-  font-weight: 600
-  letter-spacing: -0.02em
-  color: var(--rb-text-primary)
-
-RopeBridge corner seal:
-  76px × 76px
-  top right of Claim state
-
-Offer title:
-  font-size: 22px
-  same serif family and weight
+Recognition line: 14px sans, rgba(63,63,59,0.62)
+Vendor business name: 34px serif, 600 weight, tight line-height
+RopeBridge corner seal: 76px × 76px
+Offer title: 22px serif
 ```
 
 Approved logo asset:
@@ -275,20 +412,16 @@ Approved Create layout:
 
 ```txt
 [Instruction text]                         [wax seal]
-
 [Editable vendor business name]
-
 [Claim-style card]
   [tap image area to upload/replace image]
   [editable offer title at 22px]
   [editable description]
   [editable CTA]
   [noneditable limit note]
-
 [Review card]
   [Preview page]
   [Submit for approval] only after preview opens
-
 [inline preview panel]
 ```
 
@@ -298,7 +431,6 @@ Approved Create behavior:
 Vendor name is editable directly in the header.
 Text fields use true placeholder behavior; placeholder text is not real content.
 Category field is removed from visible UI.
-The separate visible upload image field is removed.
 The image card itself is the upload target.
 A subtle “Tap to upload image” overlay explains image upload.
 Limit note is not editable in the create UI.
@@ -341,7 +473,7 @@ Preferred vendor-facing label:
 Submit for approval
 ```
 
-Do not use “Publish” on the vendor-facing Create page yet. It implies the vendor controls final release.
+Do not use “Publish” on the vendor-facing Create page yet.
 
 Create files:
 
@@ -671,6 +803,15 @@ Future flow:
 Connect → Share contact → Connected
 ```
 
+Use cases:
+
+```txt
+expo lead capture
+vendor booth scans
+business card replacement
+market/conference relationship capture
+```
+
 ### Remember
 
 ```txt
@@ -681,6 +822,59 @@ Future flow:
 
 ```txt
 Connect → Save preference → Retrieve/update later
+```
+
+Use cases:
+
+```txt
+save my haircut
+save my bike specs
+save my usual order
+save grooming notes
+save product preferences
+```
+
+---
+
+## Product Wrappers / Sales Concepts
+
+SamplePass:
+
+```txt
+Farmers market / vendor samples.
+Likely uses Claim.
+Code shorthand: sp.
+```
+
+WinePassport:
+
+```txt
+Winery tasting, upgrade, route, or passport wrapper.
+If it is only “claim upgrade,” it still uses Claim.
+If it becomes multi-stop passport progress, it may need a distinct passport-progress layer later.
+Code shorthand: wp.
+```
+
+DoneLoop:
+
+```txt
+Provider workflow concept for “work done → payment → next visit / receipt / scheduling.”
+Likely service-provider territory/niche QR codes.
+Code shorthand: dl.
+```
+
+Handshake:
+
+```txt
+Contact / relationship capture.
+Code shorthand: hs.
+```
+
+Remember:
+
+```txt
+Save preference / retrieve later.
+Code shorthand: rm.
 ```
 
 ---
@@ -734,11 +928,13 @@ Potential next work:
 ```txt
 1. Test Create → upload image → preview → submit for approval on phone.
 2. Decide whether Submit for approval should insert into public.claim_submissions or stay manual/copied-link for now.
-3. Build a separate admin approval/redirect/shortener layer after Create is stable.
-4. Confirm public.interactions inserts land in Supabase from several Claim test vendors.
-5. Verify State 3 links and Connected screen.
-6. Do light security hardening after MVP testing.
-7. Build Handshake after Claim/Create is stable.
+3. Verify all printed QR routes exist before laminating/using them in the field.
+4. Build missing /go/ child route files for non-SamplePass print URLs.
+5. Build a separate admin approval/redirect/shortener layer after Create is stable.
+6. Confirm public.interactions inserts land in Supabase from several Claim test vendors.
+7. Verify State 3 links and Connected screen.
+8. Do light security hardening after MVP testing.
+9. Build Handshake and Remember after Claim/Create are stable.
 ```
 
 ---
@@ -766,6 +962,8 @@ long draft URL fallback remains stable
 public.interactions table model
 browser insert-only posture for database rows
 static-first implementation unless explicitly changed
+physical QR URLs should be short, stable /go/ child routes
+/go/ itself is not for printing; print only specific child routes
 ```
 
 Do not:
