@@ -22,7 +22,7 @@ window.ROPEBRIDGE_GO_REGISTRY = {
     vendorType: "coffee",
     vendorName: "Hollow Road Coffee",
     offerTitle: "Cold Brew Tasting",
-    destination: "/ropebridge-core/archetypes/claim/?vendor=Hollow%20Road%20Coffee&vendor_id=hollow-road-coffee&category=Coffee&title=Cold%20Brew%20Tasting&description=Claim%20a%20small%20cold%20brew%20taste%20from%20a%20local%20market%20coffee%20roaster.%20Save%20the%20vendor%20so%20you%20can%20find%20them%20again.&cta=Claim%20cold%20brew%20taste&limit=One%20sample%20per%20person%2C%20per%20market%20day.&qr=svfmpa-sp-001&campaign=svfmpa-hollow-road-coffee&image=/ropebridge-core/assets/images/claim-image-arriving-soon.svg&image_alt=Hollow%20Road%20Coffee%20sample%20image%20placeholder"
+    destination: "/ropebridge-core/archetypes/claim/?vendor=Hollow%20Road%20Coffee&vendor_id=hollow-road-coffee&category=Coffee&title=Cold%20Brew%20Tasting&description=Claim%20a%20small%20cold%20brew%20taste%20from%20a%20local%20market%20coffee%20roaster.%20Save%20the%20vendor%20so%20you%20can%20find%20them%20again.&cta=Claim%20cold%20brew%20taste&limit=One%20sample%20per%20person%2C%20per%20market%20day.&qr=svfmpa-sp-001&campaign=svfmpa-hollow-road-coffee&image=/ropebridge-core/assets/images/faux-vendors/hollow-road-coffee.png&image_alt=Hollow%20Road%20Coffee%20cold%20brew%20sample"
   },
   "svfmpa-sp-002": {
     status: "live",
