@@ -1,5 +1,6 @@
 (function () {
   const editable = document.querySelectorAll('[data-field]');
+  const linkFields = document.querySelectorAll('[data-link-field]');
   const vendorName = document.querySelector('#vendor-name');
   const imageUpload = document.querySelector('#image-upload');
   const imageUploadButton = document.querySelector('#image-upload-button');
@@ -45,6 +46,18 @@
     return valueOrPlaceholder(fieldNode(name), fallback);
   }
 
+  function normalizedUrl(value) {
+    const trimmed = String(value || '').trim();
+    if (!trimmed) return '';
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    return 'https://' + trimmed;
+  }
+
+  function setOptionalUrlParam(url, paramName, node) {
+    const value = normalizedUrl(text(node));
+    if (value) url.searchParams.set(paramName, value);
+  }
+
   function claimUrl() {
     const url = new URL(window.location.href);
     url.pathname = url.pathname.replace('/create/', '/');
@@ -66,6 +79,11 @@
     url.searchParams.set('image_alt', imageAlt);
     url.searchParams.set('campaign', vendorId + '-sample');
     url.searchParams.set('qr', vendorId + '-instant-qr');
+
+    setOptionalUrlParam(url, 'website', document.querySelector('[data-link-field="website"]'));
+    setOptionalUrlParam(url, 'order', document.querySelector('[data-link-field="order"]'));
+    setOptionalUrlParam(url, 'instagram', document.querySelector('[data-link-field="instagram"]'));
+    setOptionalUrlParam(url, 'facebook', document.querySelector('[data-link-field="facebook"]'));
 
     return url.toString();
   }
@@ -168,6 +186,10 @@
     node.addEventListener('input', update);
   });
 
+  linkFields.forEach(function (node) {
+    node.addEventListener('input', update);
+  });
+
   vendorName.addEventListener('input', update);
   previewToggle.addEventListener('click', toggleInlinePreview);
   submitApproval.addEventListener('click', handleSubmitApproval);
@@ -184,6 +206,7 @@
     uploadedImageAlt = valueOrPlaceholder(vendorName, 'Vendor') + ' sample preview';
     image.src = URL.createObjectURL(file);
     image.alt = uploadedImageAlt;
+    imageUploadButton.classList.add('has-image');
     status.textContent = 'Uploading image...';
     status.className = 'rb-status';
     update();
