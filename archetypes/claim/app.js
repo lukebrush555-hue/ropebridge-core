@@ -272,6 +272,7 @@
     const nextVendor = Object.assign({}, baseConfig.vendor || {});
     const nextOffer = Object.assign({}, baseConfig.offer || {});
     const nextTracking = Object.assign({}, baseConfig.tracking || {});
+    const nextLinks = Object.assign({}, nextVendor.links || {});
 
     if (params.get("vendor")) nextVendor.name = params.get("vendor");
     if (params.get("vendor_id")) nextVendor.id = params.get("vendor_id");
@@ -284,9 +285,15 @@
     if (params.get("image")) nextOffer.image = params.get("image");
     if (params.get("image_alt")) nextOffer.imageAlt = params.get("image_alt");
 
+    if (params.get("website")) nextLinks.website = params.get("website");
+    if (params.get("order")) nextLinks.order = params.get("order");
+    if (params.get("instagram")) nextLinks.instagram = params.get("instagram");
+    if (params.get("facebook")) nextLinks.facebook = params.get("facebook");
+
     if (params.get("campaign")) nextConfig.campaignId = params.get("campaign");
     if (params.get("qr")) nextTracking.qrId = params.get("qr");
 
+    nextVendor.links = nextLinks;
     nextConfig.vendor = nextVendor;
     nextConfig.offer = nextOffer;
     nextConfig.tracking = nextTracking;
