@@ -16,16 +16,20 @@
   const states = {
     connect: document.querySelector("#state-connect"),
     claim: document.querySelector("#state-claim"),
+    redeem: document.querySelector("#state-redeem"),
     connected: document.querySelector("#state-connected")
   };
 
   const connectForm = document.querySelector("#connect-form");
   const claimForm = document.querySelector("#claim-form");
+  const redeemForm = document.querySelector("#redeem-form");
   const submitButton = document.querySelector("#submit-button");
+  const redeemStatus = document.querySelector("#redeem-status");
   const status = document.querySelector("#form-status");
   const nameInput = document.querySelector("#connect-name");
   const phoneInput = document.querySelector("#connect-phone");
   const recognitionBanner = document.querySelector("#recognition-banner");
+  const pinInputs = Array.from(document.querySelectorAll(".rb-pin-input"));
 
   const defaultSubmitLabel = submitButton.textContent.trim();
 
@@ -33,6 +37,7 @@
   applyConfigAssets();
   applySocialLinks();
   installPhoneFormatter();
+  installPinInputs();
 
   const savedVisitor = getSavedVisitor();
 
@@ -64,9 +69,33 @@
     activateState(states.claim);
   });
 
-  claimForm.addEventListener("submit", async function (event) {
+  claimForm.addEventListener("submit", function (event) {
     event.preventDefault();
     setStatus("", null);
+    activateState(states.redeem);
+    setTimeout(function () {
+      if (pinInputs[0]) pinInputs[0].focus();
+    }, 150);
+  });
+
+  redeemForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    setRedeemStatus("", null);
+
+    const expectedPin = String((config.redeem && config.redeem.pin) || "1234");
+    const enteredPin = pinInputs.map(function (input) { return input.value; }).join("");
+
+    if (enteredPin.length !== 4) {
+      setRedeemStatus("Enter the 4-digit code from the vendor.", "error");
+      return;
+    }
+
+    if (enteredPin !== expectedPin) {
+      setRedeemStatus("That code does not match. Ask the vendor to confirm it.", "error");
+      pinInputs.forEach(function (input) { input.value = ""; });
+      if (pinInputs[0]) pinInputs[0].focus();
+      return;
+    }
 
     const hasSupabaseConfig =
       supabaseConfig.url &&
@@ -75,20 +104,30 @@
       supabaseConfig.publishableKey !== "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
     if (!hasSupabaseConfig) {
-      setStatus("Supabase is not configured yet. Add the project URL and publishable key to the demo config.", "error");
+      setRedeemStatus("Redeemed locally. Supabase is not configured yet.", "success");
+      activateState(states.connected);
       return;
     }
 
-    submitButton.disabled = true;
-    submitButton.textContent = "Saving...";
+    const redeemButton = document.querySelector("#redeem-button");
+    if (redeemButton) {
+      redeemButton.disabled = true;
+      redeemButton.textContent = "Redeeming...";
+    }
 
     try {
       await submitInteraction();
+      setRedeemStatus("Successfully verified.", "success");
       activateState(states.connected);
     } catch (error) {
       console.error(error);
-      setStatus("We could not save that yet. Please try again or show this screen to the vendor.", "error");
+      setRedeemStatus("Redeemed on this device, but we could not save it yet.", "error");
+      activateState(states.connected);
     } finally {
+      if (redeemButton) {
+        redeemButton.disabled = false;
+        redeemButton.textContent = "Redeem";
+      }
       submitButton.disabled = false;
       submitButton.textContent = offer.cta || defaultSubmitLabel;
     }
@@ -121,6 +160,7 @@
     merged.copy = Object.assign({}, baseConfig.copy || {}, overrideConfig.copy || {});
     merged.tracking = Object.assign({}, baseConfig.tracking || {}, overrideConfig.tracking || {});
     merged.supabase = Object.assign({}, baseConfig.supabase || {}, overrideConfig.supabase || {});
+    merged.redeem = Object.assign({}, baseConfig.redeem || {}, overrideConfig.redeem || {});
     return merged;
   }
 
@@ -163,6 +203,33 @@
     });
   }
 
+  function installPinInputs() {
+    pinInputs.forEach(function (input, index) {
+      input.addEventListener("input", function () {
+        input.value = String(input.value || "").replace(/\D/g, "").slice(0, 1);
+        if (input.value && pinInputs[index + 1]) {
+          pinInputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener("keydown", function (event) {
+        if (event.key === "Backspace" && !input.value && pinInputs[index - 1]) {
+          pinInputs[index - 1].focus();
+        }
+      });
+
+      input.addEventListener("paste", function (event) {
+        event.preventDefault();
+        const digits = String(event.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 4);
+        digits.split("").forEach(function (digit, digitIndex) {
+          if (pinInputs[digitIndex]) pinInputs[digitIndex].value = digit;
+        });
+        const focusIndex = Math.min(digits.length, pinInputs.length - 1);
+        if (pinInputs[focusIndex]) pinInputs[focusIndex].focus();
+      });
+    });
+  }
+
   function saveVisitorFromForm() {
     const formData = new FormData(connectForm);
     const name = String(formData.get("name") || "").trim();
@@ -188,7 +255,7 @@
 
   function activateState(targetState) {
     Object.values(states).forEach(function (section) {
-      section.classList.remove("is-active");
+      if (section) section.classList.remove("is-active");
     });
 
     targetState.classList.add("is-active");
@@ -201,6 +268,15 @@
 
     if (type) {
       status.classList.add(`is-${type}`);
+    }
+  }
+
+  function setRedeemStatus(message, type) {
+    redeemStatus.textContent = message || "";
+    redeemStatus.className = "rb-status";
+
+    if (type) {
+      redeemStatus.classList.add(`is-${type}`);
     }
   }
 
@@ -273,6 +349,7 @@
     const nextOffer = Object.assign({}, baseConfig.offer || {});
     const nextTracking = Object.assign({}, baseConfig.tracking || {});
     const nextLinks = Object.assign({}, nextVendor.links || {});
+    const nextRedeem = Object.assign({}, baseConfig.redeem || {});
 
     if (params.get("vendor")) nextVendor.name = params.get("vendor");
     if (params.get("vendor_id")) nextVendor.id = params.get("vendor_id");
@@ -289,6 +366,11 @@
     if (params.get("order")) nextLinks.order = params.get("order");
     if (params.get("instagram")) nextLinks.instagram = params.get("instagram");
     if (params.get("facebook")) nextLinks.facebook = params.get("facebook");
+    if (params.get("tiktok")) nextLinks.tiktok = params.get("tiktok");
+    if (params.get("google")) nextLinks.google = params.get("google");
+    if (params.get("booking")) nextLinks.booking = params.get("booking");
+
+    if (params.get("pin")) nextRedeem.pin = params.get("pin");
 
     if (params.get("campaign")) nextConfig.campaignId = params.get("campaign");
     if (params.get("qr")) nextTracking.qrId = params.get("qr");
@@ -297,6 +379,7 @@
     nextConfig.vendor = nextVendor;
     nextConfig.offer = nextOffer;
     nextConfig.tracking = nextTracking;
+    nextConfig.redeem = nextRedeem;
 
     return nextConfig;
   }
@@ -318,7 +401,8 @@
         offer_title: offer.title,
         vendor_category: vendor.category,
         remembered: visitor.connected,
-        source_route: window.location.pathname
+        source_route: window.location.pathname,
+        redeemed: true
       }
     };
 
