@@ -1,0 +1,77 @@
+.rb-redeem-shell {
+  min-height: min(76vh, 720px);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 18px;
+  padding: 34px 18px;
+  text-align: center;
+}
+
+.rb-redeem-logo {
+  width: 126px;
+  height: 126px;
+  margin-bottom: 22px;
+  border-radius: 999px;
+  background: url("../../assets/images/ropebridge-wax-seal.svg") center / contain no-repeat;
+}
+
+.rb-redeem-title {
+  margin: 0;
+  color: var(--rb-text-primary);
+  font-family: var(--rb-font-serif);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.rb-redeem-copy {
+  max-width: 280px;
+  margin: -8px 0 4px;
+  color: var(--rb-text-secondary);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.rb-redeem-form {
+  display: grid;
+  gap: 18px;
+  width: min(100%, 320px);
+}
+
+.rb-pin-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.rb-pin-input {
+  width: 100%;
+  min-height: 54px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(63, 63, 59, 0.24);
+  color: var(--rb-text-primary);
+  font-family: var(--rb-font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.rb-pin-input:focus {
+  outline: none;
+  box-shadow: var(--rb-shadow-focus);
+  background: rgba(255, 250, 242, 0.92);
+}
+
+.rb-redeem-button {
+  min-height: 54px;
+}
+
+.rb-redeem-success-ring {
+  width: 96px;
+  height: 96px;
+  border: 4px solid rgba(95, 112, 68, 0.72);
+  border-radius: 999px;
+}
