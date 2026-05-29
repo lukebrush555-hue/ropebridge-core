@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../../assets/css/ropebridge/components.css" />
     <link rel="stylesheet" href="../../assets/css/ropebridge/states.css" />
     <link rel="stylesheet" href="../../assets/css/ropebridge/connected-cta.css" />
+    <link rel="stylesheet" href="./redeem.css?v=redeem-1" />
   </head>
   <body>
     <main class="rb-flow-page">
@@ -92,6 +93,24 @@
           <p class="rb-powered-by">powered by RopeBridge</p>
         </section>
 
+        <section id="state-redeem" class="rb-screen-state" aria-labelledby="redeem-title">
+          <section class="rb-redeem-shell">
+            <div class="rb-redeem-logo" aria-hidden="true"></div>
+            <h1 id="redeem-title" class="rb-redeem-title">Redeem Sample</h1>
+            <p class="rb-redeem-copy">Ask the vendor for the 4-digit redeem code.</p>
+            <form id="redeem-form" class="rb-redeem-form" novalidate>
+              <div class="rb-pin-row" aria-label="Redeem code">
+                <input class="rb-pin-input" name="pin-1" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" required />
+                <input class="rb-pin-input" name="pin-2" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" required />
+                <input class="rb-pin-input" name="pin-3" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" required />
+                <input class="rb-pin-input" name="pin-4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" required />
+              </div>
+              <button id="redeem-button" class="rb-button rb-redeem-button" type="submit">Redeem</button>
+              <p id="redeem-status" class="rb-status" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+        </section>
+
         <section id="state-connected" class="rb-screen-state" aria-labelledby="connected-title">
           <header class="rb-corner-header" aria-hidden="true">
             <div class="rb-corner-seal"></div>
@@ -126,7 +145,7 @@
     </main>
 
     <script src="../../configs/examples/claim-samplepass-demo-local.js"></script>
-    <script src="./app.js?v=phone-format-1"></script>
-    <script src="./customer-links.js?v=return-actions-1"></script>
+    <script src="./app.js?v=redeem-1"></script>
+    <script src="./customer-links.js?v=vendor-page-1"></script>
   </body>
 </html>
