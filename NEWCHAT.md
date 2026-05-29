@@ -24,7 +24,7 @@ Current product:
 RopeBridge
 ```
 
-Current custom domain:
+Current public domain:
 
 ```txt
 https://ropebridge.space/
@@ -51,17 +51,10 @@ Current implemented archetype:
 Claim
 ```
 
-Current status:
+Current wrapper focus:
 
 ```txt
-Claim page visual design is complete and approved.
-Claim Create page mirrors Claim and works as a fill-in-the-blank generator.
-Create uses true placeholder text, tap-image upload, blue editable-section boxes, inline preview, and a submit-for-approval workflow.
-Create supports optional customer links: Website, Order online, Instagram, Facebook, TikTok.
-QR/link download tools were removed from the visible Create flow for now.
-Short-link JSON config storage is paused; long draft URLs are the stable fallback.
-The custom domain ropebridge.space is connected and should be treated as the active public domain.
-Static /go/ QR child routes are the current physical QR layer.
+SamplePass = farmers market / vendor samples built on Claim.
 ```
 
 ---
@@ -100,7 +93,7 @@ Do not print /go/ itself on a QR stand.
 Print only specific child URLs such as /go/svfmpa-sp-001/.
 ```
 
-GitHub Pages fallback URLs still exist, but active testing should prefer the custom domain:
+GitHub Pages fallback exists, but active testing should prefer the custom domain:
 
 ```txt
 https://lukebrush555-hue.github.io/ropebridge-core/
@@ -116,12 +109,6 @@ Current Pages source:
 GitHub Actions
 ```
 
-Root file:
-
-```txt
-index.html
-```
-
 Root behavior:
 
 ```txt
@@ -134,7 +121,7 @@ CNAME:
 CNAME = ropebridge.space
 ```
 
-DNS was configured with GitHub Pages A records for the apex/root domain and a www CNAME:
+DNS:
 
 ```txt
 @    A       185.199.108.153
@@ -149,167 +136,6 @@ Important custom-domain path rule:
 ```txt
 On ropebridge.space, internal routes should NOT include /ropebridge-core.
 Use /archetypes/claim/ and /assets/images/... instead of /ropebridge-core/archetypes/claim/ and /ropebridge-core/assets/images/...
-```
-
-The registry was updated to use custom-domain-safe destinations.
-
----
-
-## Physical QR URL Template System
-
-RopeBridge uses short, stable physical QR URLs.
-
-SamplePass URL style is approved as readable/sequential because the public farmers-market sample page contains only public marketing material:
-
-```txt
-https://ropebridge.space/go/svfmpa-sp-001/
-https://ropebridge.space/go/svfmpa-sp-002/
-https://ropebridge.space/go/svfmpa-sp-003/
-```
-
-Pattern:
-
-```txt
-/go/{location}-{product-or-wrapper}-{number}/
-```
-
-Example:
-
-```txt
-/go/svfmpa-sp-001/
-```
-
-Meaning:
-
-```txt
-svfmpa = Saucon Valley Farmers' Market
-sp     = SamplePass
-001    = physical QR asset number
-```
-
-The URL should identify the physical QR asset. Business logic and destination behavior should live in the registry or route, not in the printed URL.
-
-Current shorthand codes:
-
-```txt
-sp = SamplePass
-wp = WinePassport
-dl = DoneLoop
-hs = Handshake
-rm = Remember
-```
-
-Security-by-URL rule by product:
-
-```txt
-SamplePass: readable/sequential is acceptable for public sample pages.
-WinePassport: medium security; prefer readable + random, e.g. WP-LVY-8K4P, because upgrades/offers may have redemption value.
-Handshake: high security; use non-enumerable/random bearer-style codes because contact/relationship data may be involved.
-DoneLoop: high security; payment/invoice/customer work records require random/authenticated access.
-Remember: medium/high security; preferences may be private, so use random or authenticated access.
-```
-
-Recommended future code model for sensitive routes:
-
-```txt
-[PRODUCT]-[LOCATION]-[RANDOM]
-```
-
-Examples:
-
-```txt
-WP-LVY-8K4P
-DL-HEL-9P4C
-RM-HEL-2X8A
-```
-
-Handshake can use a distinct hard-to-guess format such as:
-
-```txt
-482_91736
-```
-
-Important distinction:
-
-```txt
-sp / wp / dl describe the product wrapper or sales concept.
-claim / handshake / remember describe the underlying RopeBridge archetype.
-WinePassport may still use the Claim archetype if it is simply “claim tasting upgrade / claim offer.”
-```
-
-Current registry file:
-
-```txt
-go/registry.js
-```
-
-Current router/root file:
-
-```txt
-go/index.html
-```
-
-Current live SamplePass QR routes created in repo:
-
-```txt
-https://ropebridge.space/go/svfmpa-sp-demo/
-https://ropebridge.space/go/svfmpa-sp-onboard/
-https://ropebridge.space/go/svfmpa-sp-001/
-https://ropebridge.space/go/svfmpa-sp-002/
-https://ropebridge.space/go/svfmpa-sp-003/
-https://ropebridge.space/go/svfmpa-sp-004/
-https://ropebridge.space/go/svfmpa-sp-005/
-https://ropebridge.space/go/svfmpa-sp-006/
-https://ropebridge.space/go/svfmpa-sp-007/
-https://ropebridge.space/go/svfmpa-sp-008/
-https://ropebridge.space/go/svfmpa-sp-009/
-https://ropebridge.space/go/svfmpa-sp-010/
-```
-
-Current SamplePass faux vendor mapping:
-
-```txt
-svfmpa-sp-001 = Hollow Road Coffee — Cold Brew Tasting
-svfmpa-sp-002 = Backyard Blooms — Market Stem Token
-svfmpa-sp-003 = Saucon Valley Apiary — Wildflower Raw Honey
-svfmpa-sp-004 = Crumb & Hearth — Sourdough Sample
-svfmpa-sp-005 = Ember Jar Provisions — Three-Heat Tasting
-svfmpa-sp-006 = Stone Fence Preserves — Strawberry Rhubarb Jam
-svfmpa-sp-007 = Creekside Creamery — Aged Cheddar Bite
-svfmpa-sp-008 = Brine & Barrel — Garlic Dill Pickle Chip
-svfmpa-sp-009 = Willow Tallow & Soap — Mini Balm Sample
-svfmpa-sp-010 = Fieldnote Teas — Iced Mint Tea Tasting
-```
-
-Reserved print-list URL sets for physical QR codes:
-
-```txt
-SamplePass:
-https://ropebridge.space/go/svfmpa-sp-001/
-https://ropebridge.space/go/svfmpa-sp-002/
-https://ropebridge.space/go/svfmpa-sp-003/
-
-WinePassport:
-Use medium-security readable + random style for live printed assets, e.g.
-https://ropebridge.space/go/WP-LVY-8K4P/
-
-DoneLoop:
-Use high-security random/authenticated style for live customer/payment/work routes.
-
-Handshake:
-Use high-security random/non-enumerable style, e.g.
-https://ropebridge.space/h/482_91736/
-
-Remember:
-Use random or authenticated access for preference/customer-memory pages.
-```
-
-Caution:
-
-```txt
-SamplePass routes are created and wired.
-Before relying on printed non-SamplePass QR codes in the field, verify route files exist and open correctly.
-If a child route does not exist in a static GitHub Pages site, it may 404 even if the URL scheme is reserved.
 ```
 
 ---
@@ -335,6 +161,7 @@ ropebridge-core/
       base.css
       components.css
       states.css
+      connected-cta.css
     images/
       ropebridge-wax-seal.svg
       samplepass-stand.jpg
@@ -348,6 +175,7 @@ ropebridge-core/
       index.html
       app.js
       customer-links.js
+      redeem.css
       README.md
       create/
         index.html
@@ -380,52 +208,90 @@ ropebridge-core/
 
 ---
 
-## Core Philosophy
+## Physical QR URL Template System
 
-RopeBridge is not a generic SaaS dashboard, CMS, ecommerce app, or pile of unrelated landing pages.
+RopeBridge uses short, stable physical QR URLs.
 
-It is infrastructure for physical-to-digital interactions:
-
-```txt
-physical encounter
-→ QR scan
-→ vendor-specific interaction
-→ optional relationship / identity / preference layer
-→ persistent relationship continuity
-```
-
-Core operating principles:
+SamplePass URL style is approved as readable/sequential because the public farmers-market sample page contains public marketing material:
 
 ```txt
-QR-first
-mobile-first
-friction once, but only when earned
-recognition continuity
-browser remains untrusted
-static-first implementation
-reusable bones + explicit config
-no heavy auth unless there is a clear need
-no dashboard unless operational need proves it
-premium physical-world UX over generic SaaS UI
+https://ropebridge.space/go/svfmpa-sp-001/
+https://ropebridge.space/go/svfmpa-sp-002/
+https://ropebridge.space/go/svfmpa-sp-003/
 ```
 
-SamplePass is no longer the top-level product. It is only an example/demo configuration of the Claim archetype.
+Pattern:
+
+```txt
+/go/{location}-{product-or-wrapper}-{number}/
+```
+
+Example:
+
+```txt
+/go/svfmpa-sp-001/
+```
+
+Meaning:
+
+```txt
+svfmpa = Saucon Valley Farmers' Market
+sp     = SamplePass
+001    = physical QR asset number
+```
+
+Security-by-URL rule by product:
+
+```txt
+SamplePass: readable/sequential is acceptable for public sample pages.
+WinePassport: medium security; prefer readable + random, e.g. WP-LVY-8K4P, because upgrades/offers may have redemption value.
+Handshake: high security; use non-enumerable/random bearer-style codes because contact/relationship data may be involved.
+DoneLoop: high security; payment/invoice/customer work records require random/authenticated access.
+Remember: medium/high security; preferences may be private, so use random or authenticated access.
+```
+
+Current SamplePass faux vendor mapping:
+
+```txt
+svfmpa-sp-001 = Hollow Road Coffee — Cold Brew Tasting
+svfmpa-sp-002 = Backyard Blooms — Market Stem Token
+svfmpa-sp-003 = Saucon Valley Apiary — Wildflower Raw Honey
+svfmpa-sp-004 = Crumb & Hearth — Sourdough Sample
+svfmpa-sp-005 = Ember Jar Provisions — Three-Heat Tasting
+svfmpa-sp-006 = Stone Fence Preserves — Strawberry Rhubarb Jam
+svfmpa-sp-007 = Creekside Creamery — Aged Cheddar Bite
+svfmpa-sp-008 = Brine & Barrel — Garlic Dill Pickle Chip
+svfmpa-sp-009 = Willow Tallow & Soap — Mini Balm Sample
+svfmpa-sp-010 = Fieldnote Teas — Iced Mint Tea Tasting
+```
 
 ---
 
-## Current Claim Flow
+## Current Claim / SamplePass Flow
 
-Current implemented flow in code still uses:
+Current implemented state flow is now:
 
 ```txt
-First-time visitor:
-Connect → Claim → Connected
-
-Returning visitor:
-skip Connect → Claim with recognition message → Connected
+Connect → Claim → Redeem → Vendor
 ```
 
-Current implementation behavior:
+Where:
+
+```txt
+Connect = current Add Phone / recognition screen.
+Claim   = offer page where customer claims sample.
+Redeem  = vendor PIN verification screen.
+Vendor  = simple vendor mini-site / return page.
+```
+
+Important naming decision:
+
+```txt
+Call the pages/states Claim and Redeem.
+The final post-redeem page is the Vendor page / mini-site / return card.
+```
+
+Current implemented behavior:
 
 ```txt
 1. User lands on page.
@@ -434,51 +300,140 @@ Current implementation behavior:
 4. User enters first name + phone + consent.
 5. App saves visitor locally.
 6. App moves to Claim state.
-7. If saved visitor exists on later scan, app skips Connect.
-8. Returning visitor lands directly on Claim state.
-9. Recognition message appears, e.g. “Welcome back, Luke.”
-10. User taps Claim.
-11. App inserts one row into public.interactions.
-12. App moves to Connected state.
+7. If saved visitor exists on later scan, app skips Connect and goes to Claim.
+8. User taps Claim.
+9. App moves to Redeem state.
+10. User asks vendor for 4-digit PIN.
+11. PIN boxes auto-advance as digits are entered.
+12. When all 4 digits are entered, app auto-checks PIN.
+13. Correct PIN opens Vendor page automatically; no tapping Redeem button.
+14. Incorrect PIN clears the boxes and shows: “Incorrect code. Ask the vendor to confirm the PIN.”
+15. On correct PIN, app attempts to insert one row into public.interactions with metadata.redeemed = true.
 ```
 
-Important product decision not yet implemented:
+Current default PIN:
 
 ```txt
-For SamplePass, the first customer scan should show the free sample/offer first, not the signup/connect screen.
-Psychology: customer receives value first, then optional relationship ask happens after the sample claim.
-Target future flow: Offer → Sample Claimed → optional Stay Connected / follow / text updates.
+1234
 ```
 
-The desired post-claim psychology:
+PIN can be supplied by URL param:
 
 ```txt
-Do not make identity the price of seeing the offer.
-Make identity, phone, email, or social follow an optional next step after value is delivered.
+pin=1234
 ```
 
-Potential post-claim ask:
+Current A/B test direction:
 
 ```txt
-We offer weekly specials. Want to stay in the loop?
-[Follow on Instagram]
-[Follow on Facebook]
-[Follow on TikTok]
-[Get text updates]
-[Order online]
+A: scan → Claim → Redeem → Vendor
+B: scan → Add Phone → Claim → Redeem → Vendor
 ```
 
-Current localStorage keys:
+The user has explicitly identified that the old Connect/Add Phone page needs to be fixed. Do not treat the current Add Phone screen as final.
+
+---
+
+## Redeem Screen — Current Approved Direction
+
+Redeem is intentionally simple.
+
+Keep only:
 
 ```txt
-ropebridge-connected
-ropebridge-name
-ropebridge-phone
+centered RopeBridge wax seal logo
+Ask vendor for PIN to redeem
+4 standard cookie-cutter PIN boxes
+incorrect-code error when needed
+```
+
+Do not add:
+
+```txt
+extra explanatory copy
+fake security-app styling
+OTP / SMS language
+large verification-app layout
+success illustration
+manual Redeem button requirement
+social/vendor links
+```
+
+Redeem is the shameless RopeBridge self-promotion moment because the customer and vendor are likely both looking at the phone.
+
+Current redeem files:
+
+```txt
+archetypes/claim/redeem.css
+archetypes/claim/app.js
+archetypes/claim/index.html
+```
+
+Recent implementation notes:
+
+```txt
+The Redeem button exists in markup but is visually hidden.
+Auto-advance is handled by app.js after the fourth digit is entered.
+Incorrect code is displayed through #redeem-status.
 ```
 
 ---
 
-## Approved Claim Visual Design — COMPLETE
+## Vendor Page / Mini-Site — Current Direction
+
+The final post-redeem page should feel like a lightweight vendor mini-site / Linktree-esque return card.
+
+Current direction:
+
+```txt
+Hollow Road Coffee
+
+[Order Online]
+[Schedule an Event]
+
+Instagram · Facebook · TikTok · Google
+```
+
+This page is for customers to return to later for:
+
+```txt
+ordering
+scheduling/events
+finding the vendor
+following socials
+Google Business/profile links
+```
+
+The previous “You’re connected” card was rejected and is removed visually by customer-links.js.
+
+Current customer link params include:
+
+```txt
+order=
+booking=
+website=
+instagram=
+facebook=
+tiktok=
+google=
+action1_label=
+action1_url=
+action2_label=
+action2_url=
+```
+
+Vendor page files:
+
+```txt
+archetypes/claim/customer-links.js
+assets/css/ropebridge/connected-cta.css
+```
+
+Important: improve this template next. The current template is better than before, but not final.
+
+---
+
+## Approved Claim Visual Design
 
 Approved active Claim layout:
 
@@ -516,19 +471,9 @@ assets/images/ropebridge-wax-seal.svg
 
 Important: use the current approved raster-style wax seal asset. Do not replace it with a generated line-art/vector-only seal.
 
-Claim files:
-
-```txt
-archetypes/claim/index.html
-archetypes/claim/app.js
-archetypes/claim/customer-links.js
-assets/css/ropebridge/components.css
-assets/css/ropebridge/states.css
-```
-
 ---
 
-## Approved Claim Create Page — CURRENT
+## Approved Claim Create Page — Current
 
 Create mirrors the Claim output rather than feeling like a detached form.
 
@@ -537,7 +482,7 @@ Approved Create layout:
 ```txt
 [Instruction text]                         [wax seal]
 [Editable vendor business name]
-[Blue dashed editable section]
+[Blue dashed editable sample section]
   [Claim-style card]
     [standard recognizable upload-image visual]
     [editable offer title at 22px]
@@ -558,27 +503,7 @@ Approved Create layout:
 [inline preview panel]
 ```
 
-Approved Create behavior:
-
-```txt
-Vendor name is editable directly in the header.
-Text fields use true placeholder behavior; placeholder text is not real content.
-Category field is removed from visible UI.
-Blue dashed section boxes identify editable groups.
-The image card itself is the upload target.
-The upload placeholder uses a standard recognizable image-upload visual.
-Limit note is not editable in the create UI.
-Image upload validates file type and size.
-Image upload stores selected image in Supabase Storage bucket ropebridge-offer-images.
-Generated draft Claim URL receives the hosted public image URL in ?image=.
-Create accepts optional website, order, instagram, facebook, and tiktok URL fields.
-Social helper text applies only to social fields, not website/order fields.
-Preview page opens an inline iframe preview.
-Inline preview refreshes automatically as edits change.
-Submit for approval appears after preview opens.
-```
-
-Customer link URL params currently supported:
+Create currently supports:
 
 ```txt
 website=
@@ -588,140 +513,30 @@ facebook=
 tiktok=
 ```
 
-Removed from visible Create flow for now:
+Create must be updated later to support:
 
 ```txt
-Scan to preview label
-QR code block
-Copy link + Download QR code button
-Open full page link
+Redeem PIN / vendor PIN
+booking / Schedule an Event
+Google Business link
+editable return action labels + URLs
+```
+
+Important Create principle:
+
+```txt
+Return Actions do not need to be overthought: use buttons and make the button text editable in Create.
 ```
 
 Current approval behavior:
 
 ```txt
 Submit for approval validates that business name and sample name are filled.
-For the current MVP implementation, it copies the long draft Claim URL and shows a submitted-for-approval status.
-This keeps the working long URL fallback stable and avoids the broken short-link JSON config approach.
-```
-
-Important architectural decision:
-
-```txt
+For current MVP, it copies the long draft Claim URL and shows submitted-for-approval status.
 Vendor does not publish directly.
-Vendor submits a draft for approval.
-User/admin reviews and can fix copy, image, slug, URL, QR, links, and typos before anything goes live.
 ```
 
-Preferred vendor-facing label:
-
-```txt
-Submit for approval
-```
-
-Do not use “Publish” on the vendor-facing Create page yet.
-
-Create files:
-
-```txt
-archetypes/claim/create/index.html
-archetypes/claim/create/create.js
-```
-
----
-
-## Short-Link / Redirect Decision
-
-Short-link JSON config storage was attempted and paused.
-
-Problem:
-
-```txt
-The short-link approach tried to save claim-configs/*.json from the browser into Supabase Storage.
-That introduced 400 errors and broke preview.
-```
-
-Stable fallback:
-
-```txt
-Create generates a long draft Claim URL.
-That long URL works and includes all draft page data as query parameters.
-```
-
-Better future model:
-
-```txt
-Create generates the working long draft URL
-→ vendor submits for approval
-→ admin/user reviews and approves
-→ separate redirect/shortener layer maps a clean URL to the approved long URL
-→ QR uses the clean approved URL
-```
-
-Do not reintroduce browser-side JSON config saving into Create unless explicitly requested.
-
----
-
-## Approved State Branding Rules
-
-```txt
-Connect / sign-in:
-centered RopeBridge wax seal above the Connect card
-
-Claim:
-recognition line + vendor name on the left
-small RopeBridge wax seal at top right
-
-Connected:
-small RopeBridge wax seal at top right
-simple connected card + useful links
-powered-by text remains quiet
-
-Create:
-instruction line + editable vendor name on the left
-small RopeBridge wax seal at top right
-Claim-style editable card
-blue dashed editable groups
-Preview → Submit for approval
-```
-
-Do not re-add:
-
-```txt
-top vendor subtitle
-Raw Honey top subtitle
-SAMPLEPASS eyebrow
-large centered seal on Claim
-large centered seal on Connected
-dark app theme
-automatic dark-mode styling
-separate visible upload-image field on Create
-category field on Create
-QR/export tools before approval
-```
-
----
-
-## Approved Visual Direction
-
-```txt
-cream / olive / brass
-premium artisan
-quiet
-physical-world
-boutique packaging
-heritage object
-not generic SaaS
-not dark dashboard
-not QR tool UI
-```
-
-Theme rule:
-
-```txt
-Force the approved light cream / olive / brass RopeBridge theme regardless of device dark-mode settings.
-Do not add automatic prefers-color-scheme dark styling for the active Claim flow.
-```
+Do not reintroduce browser-side JSON config saving unless explicitly requested.
 
 ---
 
@@ -753,42 +568,10 @@ authenticated no broad grants
 service_role full access
 ```
 
-`public.claim_submissions`:
-
-```txt
-Created 2026-05-23.
-Intended for future approval submissions.
-Currently not fully wired into Create because the first safe repo update kept submission as copied long draft URL only.
-```
-
-Claim submissions columns:
-
-```txt
-id
-created_at
-status
-vendor_id
-vendor_name
-offer_title
-offer_description
-cta_label
-limit_note
-image_url
-image_alt
-draft_url
-metadata
-```
-
 Storage bucket:
 
 ```txt
 ropebridge-offer-images
-```
-
-Bucket intent:
-
-```txt
-Store public vendor offer/sample images uploaded from the Claim create page.
 ```
 
 Bucket settings:
@@ -853,150 +636,16 @@ SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 
 ---
 
-## Claim Config Model
-
-Use one global config object for direct config-based Claim pages:
-
-```js
-window.ROPEBRIDGE_CONFIG = {
-  archetype: "claim",
-  campaignId: "backyard-blooms-sample",
-  vendor: {
-    id: "backyard-blooms",
-    name: "Backyard Blooms",
-    category: "Raw Honey",
-    links: {
-      order: "...",
-      instagram: "...",
-      facebook: "...",
-      tiktok: "...",
-      website: "..."
-    }
-  },
-  offer: {
-    title: "Wildflower Raw Honey",
-    description: "Made locally in small seasonal batches using wildflower nectar gathered throughout the Saucon Valley region.",
-    cta: "Claim sample",
-    limitNote: "One claim per person, per day.",
-    image: "../../assets/images/samplepass-stand.jpg",
-    imageAlt: "Backyard Blooms wildflower raw honey sample"
-  },
-  copy: {
-    connectHeadline: "Sign in once. Easier every time.",
-    connectSubheadline: "Use your phone number so participating vendors can recognize you when you scan again.",
-    connectBody: "No password. No account to manage. Just a faster path back to the vendor you already met.",
-    connectPrimaryAction: "Continue",
-    connectedHeadline: "You’re connected.",
-    connectedBody: "Next time you scan, we’ll know where to pick up. You can also use this page to find this vendor again.",
-    connectedNote: "Your details are saved for next time."
-  },
-  supabase: {
-    url: "YOUR_SUPABASE_URL",
-    publishableKey: "YOUR_SUPABASE_PUBLISHABLE_KEY"
-  },
-  tracking: {
-    qrId: "farmers-market-table-sign-001"
-  }
-};
-```
-
-Do not use old globals:
-
-```txt
-SAMPLEPASS_DEMO_CONFIG
-SAMPLEPASS_DESIGN_SYSTEM_V1_CONFIG
-```
-
----
-
-## Archetypes
-
-### Claim
-
-```txt
-“I want the thing.”
-```
-
-Examples:
-
-```txt
-claim sample
-claim upgrade
-claim tasting
-claim coupon
-claim raffle entry
-claim event perk
-```
-
-Claim and Create are stable enough for testing. Future Claim work should focus on vendor testing, approval workflow polish, better post-claim psychology, short-link/redirect layer, and security hardening rather than redesign.
-
-### Handshake
-
-```txt
-“I want the relationship.”
-```
-
-Future flow:
-
-```txt
-Connect → Share contact → Connected
-```
-
-Use cases:
-
-```txt
-expo lead capture
-vendor booth scans
-business card replacement
-market/conference relationship capture
-```
-
-Security:
-
-```txt
-Handshake needs high-security random/non-enumerable URLs because relationship/contact data is materially different from public sample pages.
-Do not use simple sequential URLs for live Handshake assets.
-```
-
-### Remember
-
-```txt
-“Remember this for next time.”
-```
-
-Future flow:
-
-```txt
-Connect → Save preference → Retrieve/update later
-```
-
-Use cases:
-
-```txt
-save my haircut
-save my bike specs
-save my usual order
-save grooming notes
-save product preferences
-```
-
-Security:
-
-```txt
-Remember may contain private preference data. Use random or authenticated access for live customer pages.
-```
-
----
-
 ## Product Wrappers / Sales Concepts
 
 SamplePass:
 
 ```txt
 Farmers market / vendor samples.
-Likely uses Claim.
+Uses Claim.
 Code shorthand: sp.
 Public sample pages can use readable sequential QR URLs because the shared page data is public marketing material.
+Current flow: Claim → Redeem → Vendor, with Add Phone/Connect still needing redesign.
 ```
 
 WinePassport:
@@ -1053,7 +702,7 @@ complex CRM integration
 Meta/Facebook/Instagram OAuth login
 ```
 
-QR ordering is currently just a Connected/State 3 link, not a separate archetype.
+QR ordering is currently a Vendor page link, not a separate archetype.
 
 WinePassport is not a separate archetype unless it adds multi-stop passport/check-in progress. Simple “claim upgrade” belongs under Claim.
 
@@ -1067,20 +716,21 @@ If Chrome Android makes the page look tiny, check:
 Chrome menu → Desktop site
 ```
 
-Potential next work:
+Potential next work, in current order:
 
 ```txt
-1. Test custom-domain SamplePass child routes after deploy.
-2. Test Create → upload image → preview → submit for approval on phone.
-3. Verify Website / Order online / Instagram / Facebook / TikTok params appear on Connected page.
-4. Decide whether Submit for approval should insert into public.claim_submissions or stay manual/copied-link for now.
-5. Verify all printed QR routes exist before laminating/using them in the field.
-6. Build missing /go/ child route files for non-SamplePass print URLs.
-7. Build a separate admin approval/redirect/shortener layer after Create is stable.
-8. Confirm public.interactions inserts land in Supabase from several Claim test vendors.
-9. Redesign the SamplePass flow from Connect-first to Offer-first when ready.
-10. Do light security hardening after MVP testing.
-11. Build Handshake and Remember after Claim/Create are stable.
+1. Discuss whether Redeem should include “add phone number” section + brief explanation of why.
+2. Make the Vendor template better.
+3. Fix existing Add Phone / Connect page.
+4. Update Create to support vendor-selected Redeem PIN.
+5. Update Create to support booking/google/action labels and URLs.
+6. Test custom-domain SamplePass child routes after deploy.
+7. Verify all printed QR routes exist before laminating/using them in the field.
+8. Decide whether Submit for approval should insert into public.claim_submissions or stay manual/copied-link for now.
+9. Build a separate admin approval/redirect/shortener layer after Create is stable.
+10. Confirm public.interactions inserts land in Supabase from several Claim test vendors.
+11. Do light security hardening after MVP testing.
+12. Build Handshake and Remember after Claim/Create are stable.
 ```
 
 ---
@@ -1093,20 +743,17 @@ Preserve:
 RopeBridge as top-level product name
 Claim / Handshake / Remember archetype model
 current approved Claim visual design
-current approved Create visual design
+current Claim → Redeem → Vendor direction
+Redeem screen simplicity: wax seal, one sentence, 4 PIN boxes, incorrect-code error only
+Vendor page concept: vendor name, return action buttons, quiet social links
 cream / olive / brass visual direction
 approved wax seal asset at assets/images/ropebridge-wax-seal.svg
-Claim header: recognition line + vendor name + 76px top-right seal
-Claim typography: vendor 34px serif; offer title 22px serif; recognition line 14px sans
 Create mirrors Claim with editable vendor name and editable Claim-style card
 Create image upload happens by tapping the image card, not a separate field
 Create uses the standard recognizable upload-image placeholder visual
 Create uses true placeholder text
 Create uses blue dashed editable section groups
-Create supports Website, Order online, Instagram, Facebook, TikTok fields
-Create social helper text applies only to social fields
 Create uses Preview page → Submit for approval
-Create inline preview refreshes while editing
 long draft URL fallback remains stable
 public.interactions table model
 browser insert-only posture for database rows
@@ -1126,21 +773,15 @@ reintroduce SamplePass as platform name
 copy old prototype routes
 rename old lead_requests table
 replace the approved wax seal asset with line art or a different generated mark
-replace the approved card-based layout with a stripped-down direct image/title layout
+replace the approved card-based Claim layout with a stripped-down direct image/title layout
 rebuild the create page into a traditional form
 auto-readd category or separate image upload fields to Create
 show QR/export tools before approval
 reintroduce browser-side JSON config saving without explicit approval
 add dashboard/auth/server complexity without explicit approval
 add Meta/Facebook/Instagram OAuth just to capture public profile links
-```
-
-Important note:
-
-```txt
-Current implemented Claim flow is still Connect → Claim → Connected.
-Product decision is shifting SamplePass toward Offer → Sample Claimed → optional Stay Connected, but that flow has not yet been implemented.
-Do not claim the new flow is live until app.js is changed and tested.
+turn Redeem into a fake OTP/SMS verification screen
+add a required manual Redeem button tap after the 4th PIN digit
 ```
 
 Keep changes small, inspectable, and compatible with static deployment.
