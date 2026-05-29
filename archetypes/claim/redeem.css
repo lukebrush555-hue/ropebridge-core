@@ -27,14 +27,13 @@
 }
 
 .rb-redeem-copy,
-.rb-redeem-button,
-#redeem-status {
+.rb-redeem-button {
   display: none;
 }
 
 .rb-redeem-form {
   display: grid;
-  gap: 0;
+  gap: 12px;
   width: min(100%, 292px);
 }
 
@@ -63,4 +62,16 @@
   outline: none;
   box-shadow: var(--rb-shadow-focus);
   background: rgba(255, 250, 242, 0.92);
+}
+
+.rb-redeem-status {
+  min-height: 20px;
+  margin: 0;
+  color: var(--rb-text-secondary);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.rb-redeem-status.is-error {
+  color: var(--rb-color-error);
 }
