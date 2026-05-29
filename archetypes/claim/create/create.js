@@ -84,6 +84,7 @@
     setOptionalUrlParam(url, 'order', document.querySelector('[data-link-field="order"]'));
     setOptionalUrlParam(url, 'instagram', document.querySelector('[data-link-field="instagram"]'));
     setOptionalUrlParam(url, 'facebook', document.querySelector('[data-link-field="facebook"]'));
+    setOptionalUrlParam(url, 'tiktok', document.querySelector('[data-link-field="tiktok"]'));
 
     return url.toString();
   }
