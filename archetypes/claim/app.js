@@ -24,6 +24,8 @@
   const claimForm = document.querySelector("#claim-form");
   const redeemForm = document.querySelector("#redeem-form");
   const submitButton = document.querySelector("#submit-button");
+  const redeemButton = document.querySelector("#redeem-button");
+  const redeemTitle = document.querySelector("#redeem-title");
   const redeemStatus = document.querySelector("#redeem-status");
   const status = document.querySelector("#form-status");
   const nameInput = document.querySelector("#connect-name");
@@ -32,6 +34,7 @@
   const pinInputs = Array.from(document.querySelectorAll(".rb-pin-input"));
 
   const defaultSubmitLabel = submitButton.textContent.trim();
+  let redeemInProgress = false;
 
   applyConfigText();
   applyConfigAssets();
@@ -39,15 +42,12 @@
   installPhoneFormatter();
   installPinInputs();
 
+  if (redeemTitle) redeemTitle.textContent = "Ask vendor for PIN to redeem";
+
   const savedVisitor = getSavedVisitor();
 
-  if (savedVisitor.name && nameInput) {
-    nameInput.value = savedVisitor.name;
-  }
-
-  if (savedVisitor.phone && phoneInput) {
-    phoneInput.value = formatPhoneForDisplay(savedVisitor.phone);
-  }
+  if (savedVisitor.name && nameInput) nameInput.value = savedVisitor.name;
+  if (savedVisitor.phone && phoneInput) phoneInput.value = formatPhoneForDisplay(savedVisitor.phone);
 
   if (savedVisitor.connected && savedVisitor.phone) {
     showRecognitionIfAvailable();
@@ -72,26 +72,31 @@
   claimForm.addEventListener("submit", function (event) {
     event.preventDefault();
     setStatus("", null);
+    setRedeemStatus("", null);
+    pinInputs.forEach(function (input) { input.value = ""; });
     activateState(states.redeem);
     setTimeout(function () {
       if (pinInputs[0]) pinInputs[0].focus();
     }, 150);
   });
 
-  redeemForm.addEventListener("submit", async function (event) {
+  redeemForm.addEventListener("submit", function (event) {
     event.preventDefault();
+    tryRedeem();
+  });
+
+  async function tryRedeem() {
+    if (redeemInProgress) return;
+
     setRedeemStatus("", null);
 
     const expectedPin = String((config.redeem && config.redeem.pin) || "1234");
     const enteredPin = pinInputs.map(function (input) { return input.value; }).join("");
 
-    if (enteredPin.length !== 4) {
-      setRedeemStatus("Enter the 4-digit code from the vendor.", "error");
-      return;
-    }
+    if (enteredPin.length !== 4) return;
 
     if (enteredPin !== expectedPin) {
-      setRedeemStatus("That code does not match. Ask the vendor to confirm it.", "error");
+      setRedeemStatus("Incorrect code. Ask the vendor to confirm the PIN.", "error");
       pinInputs.forEach(function (input) { input.value = ""; });
       if (pinInputs[0]) pinInputs[0].focus();
       return;
@@ -103,43 +108,28 @@
       supabaseConfig.url !== "YOUR_SUPABASE_URL" &&
       supabaseConfig.publishableKey !== "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
-    if (!hasSupabaseConfig) {
-      setRedeemStatus("Redeemed locally. Supabase is not configured yet.", "success");
-      activateState(states.connected);
-      return;
-    }
-
-    const redeemButton = document.querySelector("#redeem-button");
-    if (redeemButton) {
-      redeemButton.disabled = true;
-      redeemButton.textContent = "Redeeming...";
-    }
+    redeemInProgress = true;
+    if (redeemButton) redeemButton.disabled = true;
 
     try {
-      await submitInteraction();
-      setRedeemStatus("Successfully verified.", "success");
+      if (hasSupabaseConfig) await submitInteraction();
       activateState(states.connected);
     } catch (error) {
       console.error(error);
-      setRedeemStatus("Redeemed on this device, but we could not save it yet.", "error");
       activateState(states.connected);
     } finally {
-      if (redeemButton) {
-        redeemButton.disabled = false;
-        redeemButton.textContent = "Redeem";
-      }
+      redeemInProgress = false;
+      if (redeemButton) redeemButton.disabled = false;
       submitButton.disabled = false;
       submitButton.textContent = offer.cta || defaultSubmitLabel;
     }
-  });
+  }
 
   async function loadRemoteConfig() {
     const params = new URLSearchParams(window.location.search);
     const configId = params.get("c");
 
-    if (!configId || !/^[a-z0-9-]+$/i.test(configId)) {
-      return null;
-    }
+    if (!configId || !/^[a-z0-9-]+$/i.test(configId)) return null;
 
     const endpoint = "https://chqwqnxxggswbsijxnio.supabase.co/storage/v1/object/public/ropebridge-offer-images/claim-configs/" + encodeURIComponent(configId) + ".json";
 
@@ -178,15 +168,8 @@
 
   function formatPhoneForDisplay(value) {
     const digits = digitsOnly(value.replace(/^\+1\s*/, ""));
-
-    if (digits.length <= 3) {
-      return digits ? `(${digits}` : "";
-    }
-
-    if (digits.length <= 6) {
-      return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-    }
-
+    if (digits.length <= 3) return digits ? `(${digits}` : "";
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
   }
 
@@ -197,7 +180,6 @@
 
   function installPhoneFormatter() {
     if (!phoneInput) return;
-
     phoneInput.addEventListener("input", function () {
       phoneInput.value = formatPhoneForDisplay(phoneInput.value);
     });
@@ -207,15 +189,15 @@
     pinInputs.forEach(function (input, index) {
       input.addEventListener("input", function () {
         input.value = String(input.value || "").replace(/\D/g, "").slice(0, 1);
-        if (input.value && pinInputs[index + 1]) {
-          pinInputs[index + 1].focus();
+        setRedeemStatus("", null);
+        if (input.value && pinInputs[index + 1]) pinInputs[index + 1].focus();
+        if (pinInputs.every(function (pinInput) { return pinInput.value.length === 1; })) {
+          window.setTimeout(tryRedeem, 120);
         }
       });
 
       input.addEventListener("keydown", function (event) {
-        if (event.key === "Backspace" && !input.value && pinInputs[index - 1]) {
-          pinInputs[index - 1].focus();
-        }
+        if (event.key === "Backspace" && !input.value && pinInputs[index - 1]) pinInputs[index - 1].focus();
       });
 
       input.addEventListener("paste", function (event) {
@@ -226,6 +208,7 @@
         });
         const focusIndex = Math.min(digits.length, pinInputs.length - 1);
         if (pinInputs[focusIndex]) pinInputs[focusIndex].focus();
+        if (digits.length === 4) window.setTimeout(tryRedeem, 120);
       });
     });
   }
@@ -234,7 +217,6 @@
     const formData = new FormData(connectForm);
     const name = String(formData.get("name") || "").trim();
     const normalizedPhone = normalizePhone(formData.get("phone"));
-
     localStorage.setItem(storageKeys.connected, "true");
     localStorage.setItem(storageKeys.name, name);
     localStorage.setItem(storageKeys.phone, normalizedPhone.trim());
@@ -242,14 +224,8 @@
 
   function showRecognitionIfAvailable() {
     const visitor = getSavedVisitor();
-
-    if (!recognitionBanner || !visitor.connected) {
-      return;
-    }
-
-    recognitionBanner.textContent = visitor.name
-      ? `Welcome back, ${visitor.name}.`
-      : "Welcome back.";
+    if (!recognitionBanner || !visitor.connected) return;
+    recognitionBanner.textContent = visitor.name ? `Welcome back, ${visitor.name}.` : "Welcome back.";
     recognitionBanner.classList.add("is-visible");
   }
 
@@ -257,7 +233,6 @@
     Object.values(states).forEach(function (section) {
       if (section) section.classList.remove("is-active");
     });
-
     targetState.classList.add("is-active");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -265,19 +240,14 @@
   function setStatus(message, type) {
     status.textContent = message || "";
     status.className = "rb-status";
-
-    if (type) {
-      status.classList.add(`is-${type}`);
-    }
+    if (type) status.classList.add(`is-${type}`);
   }
 
   function setRedeemStatus(message, type) {
+    if (!redeemStatus) return;
     redeemStatus.textContent = message || "";
-    redeemStatus.className = "rb-status";
-
-    if (type) {
-      redeemStatus.classList.add(`is-${type}`);
-    }
+    redeemStatus.className = "rb-status rb-redeem-status";
+    if (type) redeemStatus.classList.add(`is-${type}`);
   }
 
   function applyConfigText() {
@@ -298,35 +268,26 @@
 
     document.querySelectorAll("[data-config-text]").forEach(function (element) {
       const value = values[element.dataset.configText];
-      if (value) {
-        element.textContent = value;
-      }
+      if (value) element.textContent = value;
     });
   }
 
   function applyConfigAssets() {
     document.querySelectorAll("[data-config-src]").forEach(function (element) {
-      if (offer.image) {
-        element.setAttribute("src", offer.image);
-      }
+      if (offer.image) element.setAttribute("src", offer.image);
     });
 
     document.querySelectorAll("[data-config-alt]").forEach(function (element) {
-      if (offer.imageAlt) {
-        element.setAttribute("alt", offer.imageAlt);
-      }
+      if (offer.imageAlt) element.setAttribute("alt", offer.imageAlt);
     });
   }
 
   function applySocialLinks() {
-    if (!vendor.links) {
-      return;
-    }
+    if (!vendor.links) return;
 
     document.querySelectorAll("[data-social]").forEach(function (link) {
       const key = link.dataset.social;
       const value = vendor.links[key];
-
       if (value) {
         link.href = value;
         link.target = "_blank";
@@ -339,10 +300,7 @@
 
   function applyUrlConfig(baseConfig) {
     const params = new URLSearchParams(window.location.search);
-
-    if (!Array.from(params.keys()).length) {
-      return baseConfig;
-    }
+    if (!Array.from(params.keys()).length) return baseConfig;
 
     const nextConfig = Object.assign({}, baseConfig);
     const nextVendor = Object.assign({}, baseConfig.vendor || {});
@@ -417,8 +375,6 @@
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok) {
-      throw new Error("Interaction insert failed.");
-    }
+    if (!response.ok) throw new Error("Interaction insert failed.");
   }
 })();
