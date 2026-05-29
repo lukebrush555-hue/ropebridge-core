@@ -1,71 +1,64 @@
-.rb-link-section {
+.rb-return-card-section {
   margin-top: 18px;
-  padding: 22px;
+  padding: 26px 22px;
   border: 1px solid rgba(20, 36, 22, 0.1);
   border-radius: 28px;
   background: rgba(255, 253, 248, 0.72);
   box-shadow: 0 18px 48px rgba(43, 35, 22, 0.08);
 }
 
-.rb-follow-card-inner {
+.rb-return-card-inner {
   display: grid;
-  gap: 14px;
-  margin-top: 12px;
+  gap: 18px;
+  text-align: center;
 }
 
-.rb-follow-title {
+.rb-return-vendor {
   margin: 0;
   color: var(--rb-text-primary);
   font-family: var(--rb-font-serif);
-  font-size: 24px;
-  line-height: 1.12;
-}
-
-.rb-follow-body {
-  margin: 0;
-  color: var(--rb-text-secondary);
-  font-size: 15px;
-  line-height: 1.45;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
 }
 
 .rb-return-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 4px;
 }
 
 .rb-return-action {
   min-height: 54px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(20, 36, 22, 0.1);
+  border: 1px solid rgba(20, 36, 22, 0.12);
   border-radius: 16px;
   background: rgba(255, 250, 242, 0.82);
   color: var(--rb-text-primary);
+  font-size: 15px;
   font-weight: 700;
   text-decoration: none;
   text-align: center;
 }
 
-.rb-social-icon-row {
+.rb-social-text-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  margin-top: 6px;
+  gap: 7px;
+  color: rgba(63, 63, 59, 0.64);
+  font-size: 15px;
+  line-height: 1.4;
 }
 
-.rb-social-icon {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(20, 36, 22, 0.1);
-  border-radius: 999px;
-  background: rgba(95, 112, 68, 0.08);
-  color: var(--rb-text-primary);
-  font-size: 12px;
-  font-weight: 800;
+.rb-social-text-link {
+  color: rgba(63, 63, 59, 0.72);
+  font-weight: 700;
   text-decoration: none;
+}
+
+.rb-social-dot {
+  color: rgba(63, 63, 59, 0.36);
 }
