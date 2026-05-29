@@ -1,6 +1,6 @@
 # RopeBridge New Chat Startup
 
-_Last updated: 2026-05-25_
+_Last updated: 2026-05-29_
 
 ## Start Here
 
@@ -24,6 +24,12 @@ Current product:
 RopeBridge
 ```
 
+Current custom domain:
+
+```txt
+https://ropebridge.space/
+```
+
 Current framing:
 
 ```txt
@@ -34,9 +40,9 @@ It is like Linktree for physical-world relationships, but action-based and recog
 Core archetypes:
 
 ```txt
-Claim = “I want the thing.”
+Claim     = “I want the thing.”
 Handshake = “I want the relationship.”
-Remember = “Remember this for next time.”
+Remember  = “Remember this for next time.”
 ```
 
 Current implemented archetype:
@@ -50,32 +56,40 @@ Current status:
 ```txt
 Claim page visual design is complete and approved.
 Claim Create page mirrors Claim and works as a fill-in-the-blank generator.
-Create uses true placeholder text, tap-image upload, inline preview, and a submit-for-approval workflow.
+Create uses true placeholder text, tap-image upload, blue editable-section boxes, inline preview, and a submit-for-approval workflow.
+Create supports optional customer links: Website, Order online, Instagram, Facebook, TikTok.
 QR/link download tools were removed from the visible Create flow for now.
 Short-link JSON config storage is paused; long draft URLs are the stable fallback.
-A static /go/ QR URL template layer has started so physical QR codes can be printed before final destinations exist.
+The custom domain ropebridge.space is connected and should be treated as the active public domain.
+Static /go/ QR child routes are the current physical QR layer.
 ```
 
 ---
 
 ## Current Links
 
+Root:
+
+```txt
+https://ropebridge.space/
+```
+
 Claim page:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/
+https://ropebridge.space/archetypes/claim/
 ```
 
 Create page:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/
+https://ropebridge.space/archetypes/claim/create/
 ```
 
 QR registry/root route:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/go/
+https://ropebridge.space/go/
 ```
 
 Important:
@@ -86,17 +100,72 @@ Do not print /go/ itself on a QR stand.
 Print only specific child URLs such as /go/svfmpa-sp-001/.
 ```
 
-Latest Create test URL:
+GitHub Pages fallback URLs still exist, but active testing should prefer the custom domain:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/archetypes/claim/create/?v=approval-flow-1
+https://lukebrush555-hue.github.io/ropebridge-core/
 ```
+
+---
+
+## Custom Domain / Deployment Notes
+
+Current Pages source:
+
+```txt
+GitHub Actions
+```
+
+Root file:
+
+```txt
+index.html
+```
+
+Root behavior:
+
+```txt
+https://ropebridge.space/ redirects to /go/
+```
+
+CNAME:
+
+```txt
+CNAME = ropebridge.space
+```
+
+DNS was configured with GitHub Pages A records for the apex/root domain and a www CNAME:
+
+```txt
+@    A       185.199.108.153
+@    A       185.199.109.153
+@    A       185.199.110.153
+@    A       185.199.111.153
+www  CNAME   lukebrush555-hue.github.io
+```
+
+Important custom-domain path rule:
+
+```txt
+On ropebridge.space, internal routes should NOT include /ropebridge-core.
+Use /archetypes/claim/ and /assets/images/... instead of /ropebridge-core/archetypes/claim/ and /ropebridge-core/assets/images/...
+```
+
+The registry was updated to use custom-domain-safe destinations.
 
 ---
 
 ## Physical QR URL Template System
 
-RopeBridge now uses short, stable physical QR URLs that can exist before the final page is finished.
+RopeBridge uses short, stable physical QR URLs.
+
+SamplePass URL style is approved as readable/sequential because the public farmers-market sample page contains only public marketing material:
+
+```txt
+https://ropebridge.space/go/svfmpa-sp-001/
+https://ropebridge.space/go/svfmpa-sp-002/
+https://ropebridge.space/go/svfmpa-sp-003/
+```
 
 Pattern:
 
@@ -130,6 +199,36 @@ hs = Handshake
 rm = Remember
 ```
 
+Security-by-URL rule by product:
+
+```txt
+SamplePass: readable/sequential is acceptable for public sample pages.
+WinePassport: medium security; prefer readable + random, e.g. WP-LVY-8K4P, because upgrades/offers may have redemption value.
+Handshake: high security; use non-enumerable/random bearer-style codes because contact/relationship data may be involved.
+DoneLoop: high security; payment/invoice/customer work records require random/authenticated access.
+Remember: medium/high security; preferences may be private, so use random or authenticated access.
+```
+
+Recommended future code model for sensitive routes:
+
+```txt
+[PRODUCT]-[LOCATION]-[RANDOM]
+```
+
+Examples:
+
+```txt
+WP-LVY-8K4P
+DL-HEL-9P4C
+RM-HEL-2X8A
+```
+
+Handshake can use a distinct hard-to-guess format such as:
+
+```txt
+482_91736
+```
+
 Important distinction:
 
 ```txt
@@ -153,18 +252,18 @@ go/index.html
 Current live SamplePass QR routes created in repo:
 
 ```txt
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-demo/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-onboard/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-001/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-002/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-003/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-004/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-005/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-006/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-007/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-008/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-009/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-010/
+https://ropebridge.space/go/svfmpa-sp-demo/
+https://ropebridge.space/go/svfmpa-sp-onboard/
+https://ropebridge.space/go/svfmpa-sp-001/
+https://ropebridge.space/go/svfmpa-sp-002/
+https://ropebridge.space/go/svfmpa-sp-003/
+https://ropebridge.space/go/svfmpa-sp-004/
+https://ropebridge.space/go/svfmpa-sp-005/
+https://ropebridge.space/go/svfmpa-sp-006/
+https://ropebridge.space/go/svfmpa-sp-007/
+https://ropebridge.space/go/svfmpa-sp-008/
+https://ropebridge.space/go/svfmpa-sp-009/
+https://ropebridge.space/go/svfmpa-sp-010/
 ```
 
 Current SamplePass faux vendor mapping:
@@ -186,37 +285,30 @@ Reserved print-list URL sets for physical QR codes:
 
 ```txt
 SamplePass:
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-001/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-002/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-sp-003/
+https://ropebridge.space/go/svfmpa-sp-001/
+https://ropebridge.space/go/svfmpa-sp-002/
+https://ropebridge.space/go/svfmpa-sp-003/
 
 WinePassport:
-https://lukebrush555-hue.github.io/ropebridge-core/go/lv-wp-001/
-https://lukebrush555-hue.github.io/ropebridge-core/go/lv-wp-002/
-https://lukebrush555-hue.github.io/ropebridge-core/go/lv-wp-003/
+Use medium-security readable + random style for live printed assets, e.g.
+https://ropebridge.space/go/WP-LVY-8K4P/
 
 DoneLoop:
-https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-dl-001/
-https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-dl-002/
-https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-dl-003/
+Use high-security random/authenticated style for live customer/payment/work routes.
 
 Handshake:
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-hs-001/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-hs-002/
-https://lukebrush555-hue.github.io/ropebridge-core/go/svfmpa-hs-003/
+Use high-security random/non-enumerable style, e.g.
+https://ropebridge.space/h/482_91736/
 
 Remember:
-https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-rm-001/
-https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-rm-002/
-https://lukebrush555-hue.github.io/ropebridge-core/go/hellertown-rm-003/
+Use random or authenticated access for preference/customer-memory pages.
 ```
 
 Caution:
 
 ```txt
 SamplePass routes are created and wired.
-WinePassport route files lv-wp-001 and lv-wp-002 were started.
-Before relying on printed non-SamplePass QR codes in the field, verify the route files exist and open correctly.
+Before relying on printed non-SamplePass QR codes in the field, verify route files exist and open correctly.
 If a child route does not exist in a static GitHub Pages site, it may 404 even if the URL scheme is reserved.
 ```
 
@@ -226,6 +318,8 @@ If a child route does not exist in a static GitHub Pages site, it may 404 even i
 
 ```txt
 ropebridge-core/
+  CNAME
+  index.html
   NEWCHAT.md
   README.md
   PROJECT_CONTEXT.md
@@ -245,12 +339,15 @@ ropebridge-core/
       ropebridge-wax-seal.svg
       samplepass-stand.jpg
       claim-image-arriving-soon.svg
-      markup_1000003500.jpg
+      faux-vendors/
+        hollow-road-coffee.png
+        crumb-and-hearth.png
 
   archetypes/
     claim/
       index.html
       app.js
+      customer-links.js
       README.md
       create/
         index.html
@@ -292,8 +389,8 @@ It is infrastructure for physical-to-digital interactions:
 ```txt
 physical encounter
 → QR scan
-→ lightweight identity handshake
 → vendor-specific interaction
+→ optional relationship / identity / preference layer
 → persistent relationship continuity
 ```
 
@@ -302,7 +399,7 @@ Core operating principles:
 ```txt
 QR-first
 mobile-first
-friction once
+friction once, but only when earned
 recognition continuity
 browser remains untrusted
 static-first implementation
@@ -318,7 +415,7 @@ SamplePass is no longer the top-level product. It is only an example/demo config
 
 ## Current Claim Flow
 
-The state flow is critical and must be preserved.
+Current implemented flow in code still uses:
 
 ```txt
 First-time visitor:
@@ -328,7 +425,7 @@ Returning visitor:
 skip Connect → Claim with recognition message → Connected
 ```
 
-Detailed behavior:
+Current implementation behavior:
 
 ```txt
 1. User lands on page.
@@ -343,6 +440,32 @@ Detailed behavior:
 10. User taps Claim.
 11. App inserts one row into public.interactions.
 12. App moves to Connected state.
+```
+
+Important product decision not yet implemented:
+
+```txt
+For SamplePass, the first customer scan should show the free sample/offer first, not the signup/connect screen.
+Psychology: customer receives value first, then optional relationship ask happens after the sample claim.
+Target future flow: Offer → Sample Claimed → optional Stay Connected / follow / text updates.
+```
+
+The desired post-claim psychology:
+
+```txt
+Do not make identity the price of seeing the offer.
+Make identity, phone, email, or social follow an optional next step after value is delivered.
+```
+
+Potential post-claim ask:
+
+```txt
+We offer weekly specials. Want to stay in the loop?
+[Follow on Instagram]
+[Follow on Facebook]
+[Follow on TikTok]
+[Get text updates]
+[Order online]
 ```
 
 Current localStorage keys:
@@ -398,6 +521,7 @@ Claim files:
 ```txt
 archetypes/claim/index.html
 archetypes/claim/app.js
+archetypes/claim/customer-links.js
 assets/css/ropebridge/components.css
 assets/css/ropebridge/states.css
 ```
@@ -413,12 +537,21 @@ Approved Create layout:
 ```txt
 [Instruction text]                         [wax seal]
 [Editable vendor business name]
-[Claim-style card]
-  [tap image area to upload/replace image]
-  [editable offer title at 22px]
-  [editable description]
-  [editable CTA]
-  [noneditable limit note]
+[Blue dashed editable section]
+  [Claim-style card]
+    [standard recognizable upload-image visual]
+    [editable offer title at 22px]
+    [editable description]
+    [editable CTA]
+    [noneditable limit note]
+[Blue dashed customer links section]
+  Website
+  Order online
+  Social profiles
+    helper: Open your profile, tap Share, then paste the link here.
+    Instagram
+    Facebook
+    TikTok
 [Review card]
   [Preview page]
   [Submit for approval] only after preview opens
@@ -431,15 +564,28 @@ Approved Create behavior:
 Vendor name is editable directly in the header.
 Text fields use true placeholder behavior; placeholder text is not real content.
 Category field is removed from visible UI.
+Blue dashed section boxes identify editable groups.
 The image card itself is the upload target.
-A subtle “Tap to upload image” overlay explains image upload.
+The upload placeholder uses a standard recognizable image-upload visual.
 Limit note is not editable in the create UI.
 Image upload validates file type and size.
 Image upload stores selected image in Supabase Storage bucket ropebridge-offer-images.
 Generated draft Claim URL receives the hosted public image URL in ?image=.
+Create accepts optional website, order, instagram, facebook, and tiktok URL fields.
+Social helper text applies only to social fields, not website/order fields.
 Preview page opens an inline iframe preview.
 Inline preview refreshes automatically as edits change.
 Submit for approval appears after preview opens.
+```
+
+Customer link URL params currently supported:
+
+```txt
+website=
+order=
+instagram=
+facebook=
+tiktok=
 ```
 
 Removed from visible Create flow for now:
@@ -464,7 +610,7 @@ Important architectural decision:
 ```txt
 Vendor does not publish directly.
 Vendor submits a draft for approval.
-User/admin reviews and can fix copy, image, slug, URL, QR, and typos before anything goes live.
+User/admin reviews and can fix copy, image, slug, URL, QR, links, and typos before anything goes live.
 ```
 
 Preferred vendor-facing label:
@@ -480,15 +626,6 @@ Create files:
 ```txt
 archetypes/claim/create/index.html
 archetypes/claim/create/create.js
-```
-
-Recent relevant commits:
-
-```txt
-8efc834 Restore long URL create links
-0bd1874 Point create page to restored long link script
-aee0432 Simplify create output to approval submission
-987043e Add preview approval UI to create page
 ```
 
 ---
@@ -544,6 +681,7 @@ Create:
 instruction line + editable vendor name on the left
 small RopeBridge wax seal at top right
 Claim-style editable card
+blue dashed editable groups
 Preview → Submit for approval
 ```
 
@@ -731,6 +869,7 @@ window.ROPEBRIDGE_CONFIG = {
       order: "...",
       instagram: "...",
       facebook: "...",
+      tiktok: "...",
       website: "..."
     }
   },
@@ -789,7 +928,7 @@ claim raffle entry
 claim event perk
 ```
 
-Claim and Create are stable enough for testing. Future Claim work should focus on vendor testing, approval workflow polish, short-link/redirect layer, and security hardening rather than redesign.
+Claim and Create are stable enough for testing. Future Claim work should focus on vendor testing, approval workflow polish, better post-claim psychology, short-link/redirect layer, and security hardening rather than redesign.
 
 ### Handshake
 
@@ -810,6 +949,13 @@ expo lead capture
 vendor booth scans
 business card replacement
 market/conference relationship capture
+```
+
+Security:
+
+```txt
+Handshake needs high-security random/non-enumerable URLs because relationship/contact data is materially different from public sample pages.
+Do not use simple sequential URLs for live Handshake assets.
 ```
 
 ### Remember
@@ -834,6 +980,12 @@ save grooming notes
 save product preferences
 ```
 
+Security:
+
+```txt
+Remember may contain private preference data. Use random or authenticated access for live customer pages.
+```
+
 ---
 
 ## Product Wrappers / Sales Concepts
@@ -844,6 +996,7 @@ SamplePass:
 Farmers market / vendor samples.
 Likely uses Claim.
 Code shorthand: sp.
+Public sample pages can use readable sequential QR URLs because the shared page data is public marketing material.
 ```
 
 WinePassport:
@@ -853,6 +1006,7 @@ Winery tasting, upgrade, route, or passport wrapper.
 If it is only “claim upgrade,” it still uses Claim.
 If it becomes multi-stop passport progress, it may need a distinct passport-progress layer later.
 Code shorthand: wp.
+Security tier: medium. Prefer readable + random URLs for live printed assets because upgrades/offers can be abused.
 ```
 
 DoneLoop:
@@ -861,6 +1015,7 @@ DoneLoop:
 Provider workflow concept for “work done → payment → next visit / receipt / scheduling.”
 Likely service-provider territory/niche QR codes.
 Code shorthand: dl.
+Security tier: high. DoneLoop involves payments/invoices/customer work records, so use random/authenticated access.
 ```
 
 Handshake:
@@ -868,6 +1023,7 @@ Handshake:
 ```txt
 Contact / relationship capture.
 Code shorthand: hs.
+Security tier: high.
 ```
 
 Remember:
@@ -875,6 +1031,7 @@ Remember:
 ```txt
 Save preference / retrieve later.
 Code shorthand: rm.
+Security tier: medium/high depending on sensitivity.
 ```
 
 ---
@@ -893,25 +1050,12 @@ direct ordering archetype
 passport-progress archetype
 dark mode for Claim
 complex CRM integration
+Meta/Facebook/Instagram OAuth login
 ```
 
-QR ordering is currently just a State 3 link, not a separate archetype.
+QR ordering is currently just a Connected/State 3 link, not a separate archetype.
 
 WinePassport is not a separate archetype unless it adds multi-stop passport/check-in progress. Simple “claim upgrade” belongs under Claim.
-
----
-
-## Legacy Repo Context
-
-Old repo:
-
-```txt
-lukebrush555-hue/qr-intake-system
-```
-
-Useful for historical context only.
-
-Do not migrate old prototype routes, dark-mode attempts, SamplePass-as-platform naming, or obsolete configs into `ropebridge-core`.
 
 ---
 
@@ -926,15 +1070,17 @@ Chrome menu → Desktop site
 Potential next work:
 
 ```txt
-1. Test Create → upload image → preview → submit for approval on phone.
-2. Decide whether Submit for approval should insert into public.claim_submissions or stay manual/copied-link for now.
-3. Verify all printed QR routes exist before laminating/using them in the field.
-4. Build missing /go/ child route files for non-SamplePass print URLs.
-5. Build a separate admin approval/redirect/shortener layer after Create is stable.
-6. Confirm public.interactions inserts land in Supabase from several Claim test vendors.
-7. Verify State 3 links and Connected screen.
-8. Do light security hardening after MVP testing.
-9. Build Handshake and Remember after Claim/Create are stable.
+1. Test custom-domain SamplePass child routes after deploy.
+2. Test Create → upload image → preview → submit for approval on phone.
+3. Verify Website / Order online / Instagram / Facebook / TikTok params appear on Connected page.
+4. Decide whether Submit for approval should insert into public.claim_submissions or stay manual/copied-link for now.
+5. Verify all printed QR routes exist before laminating/using them in the field.
+6. Build missing /go/ child route files for non-SamplePass print URLs.
+7. Build a separate admin approval/redirect/shortener layer after Create is stable.
+8. Confirm public.interactions inserts land in Supabase from several Claim test vendors.
+9. Redesign the SamplePass flow from Connect-first to Offer-first when ready.
+10. Do light security hardening after MVP testing.
+11. Build Handshake and Remember after Claim/Create are stable.
 ```
 
 ---
@@ -946,16 +1092,19 @@ Preserve:
 ```txt
 RopeBridge as top-level product name
 Claim / Handshake / Remember archetype model
-Connect → Claim → Connected state flow
-returning visitor skip-Connect behavior
-localStorage recognition behavior
+current approved Claim visual design
+current approved Create visual design
 cream / olive / brass visual direction
 approved wax seal asset at assets/images/ropebridge-wax-seal.svg
 Claim header: recognition line + vendor name + 76px top-right seal
 Claim typography: vendor 34px serif; offer title 22px serif; recognition line 14px sans
 Create mirrors Claim with editable vendor name and editable Claim-style card
 Create image upload happens by tapping the image card, not a separate field
+Create uses the standard recognizable upload-image placeholder visual
 Create uses true placeholder text
+Create uses blue dashed editable section groups
+Create supports Website, Order online, Instagram, Facebook, TikTok fields
+Create social helper text applies only to social fields
 Create uses Preview page → Submit for approval
 Create inline preview refreshes while editing
 long draft URL fallback remains stable
@@ -964,6 +1113,8 @@ browser insert-only posture for database rows
 static-first implementation unless explicitly changed
 physical QR URLs should be short, stable /go/ child routes
 /go/ itself is not for printing; print only specific child routes
+SamplePass readable sequential QR style is approved
+security tiers: SamplePass low, WinePassport medium, Handshake/DoneLoop high
 ```
 
 Do not:
@@ -974,7 +1125,6 @@ add dark mode to active Claim
 reintroduce SamplePass as platform name
 copy old prototype routes
 rename old lead_requests table
-break the working state flow
 replace the approved wax seal asset with line art or a different generated mark
 replace the approved card-based layout with a stripped-down direct image/title layout
 rebuild the create page into a traditional form
@@ -982,6 +1132,15 @@ auto-readd category or separate image upload fields to Create
 show QR/export tools before approval
 reintroduce browser-side JSON config saving without explicit approval
 add dashboard/auth/server complexity without explicit approval
+add Meta/Facebook/Instagram OAuth just to capture public profile links
+```
+
+Important note:
+
+```txt
+Current implemented Claim flow is still Connect → Claim → Connected.
+Product decision is shifting SamplePass toward Offer → Sample Claimed → optional Stay Connected, but that flow has not yet been implemented.
+Do not claim the new flow is live until app.js is changed and tested.
 ```
 
 Keep changes small, inspectable, and compatible with static deployment.
