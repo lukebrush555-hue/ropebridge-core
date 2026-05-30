@@ -1,10 +1,12 @@
-# RopeBridge Repo Safety Protocol
+# Repository Safety Protocol
 
 _Last updated: 2026-05-30_
 
 ## Purpose
 
-This protocol protects RopeBridge from accidental destructive edits, especially when AI-assisted tools are modifying the repository.
+This protocol protects a repository from accidental destructive edits, especially when AI-assisted tools are modifying files.
+
+It is meant to be reusable across projects. Project-specific branches, filenames, and local backup locations can be listed in a short addendum at the bottom.
 
 Operating rule:
 
@@ -22,8 +24,8 @@ Use this order when deciding repo safety practices:
 
 1. Official GitHub documentation for branch protection, pull requests, releases, and repository controls.
 2. Official Git documentation for branches, stable branches, topic branches, and recovery concepts.
-3. Established engineering practice for small commits, PR review, and release snapshots.
-4. RopeBridge-specific lessons from prior mistakes.
+3. Established engineering practice for small commits, pull request review, and release snapshots.
+4. Project-specific lessons from prior mistakes.
 5. User preference for naming and workflow friction.
 
 ## Branch roles
@@ -63,12 +65,25 @@ For meaningful app/code/design changes:
 5. Inspect the diff.
 6. Test the relevant page or flow.
 7. Merge only after approval.
-8. Update NEWCHAT.md last, after the decision is approved.
+8. Update project documentation last, after the decision is approved.
 ```
 
 ## Critical files
 
-Treat these as protected-by-process:
+Each project should define its own critical files. These usually include:
+
+```txt
+startup/context docs
+README.md
+security docs
+deployment files
+workflow files
+routing/registry files
+core app entry files
+core data/schema files
+```
+
+Examples:
 
 ```txt
 NEWCHAT.md
@@ -76,10 +91,6 @@ README.md
 PROJECT_CONTEXT.md
 AGENTS.md
 SECURITY.md
-archetypes/claim/index.html
-archetypes/claim/app.js
-archetypes/claim/create/create.js
-go/registry.js
 .github/workflows/*
 ```
 
@@ -93,19 +104,29 @@ No partial backup pretending to be complete.
 No edits without reading the current file first.
 ```
 
-## NEWCHAT.md handling
+## Startup/context document handling
 
-`NEWCHAT.md` is a critical operating document.
+A startup/context document is any file that tells future work sessions how to understand the project.
 
-Before replacing or heavily editing it:
+Examples:
+
+```txt
+NEWCHAT.md
+PROJECT_CONTEXT.md
+AGENTS.md
+handoff.md
+startup.md
+```
+
+Before replacing or heavily editing a startup/context document:
 
 ```txt
 1. Create a backup branch.
 2. Create a feature branch.
-3. Create a file-level backup copy under docs/backups/NEWCHAT/ if the full current file body is available.
-4. Edit NEWCHAT.md only on the feature branch.
+3. Create a file-level backup copy if the full current file body is available.
+4. Edit the document only on the feature branch.
 5. Inspect the diff before merge.
-6. Provide the full updated NEWCHAT.md text after approval so the local CRITICAL copy can be updated.
+6. Provide the full updated text after approval so any local redundant copy can be updated.
 ```
 
 If the full current file body cannot be retrieved safely, do not perform a full replacement.
@@ -115,47 +136,60 @@ If the full current file body cannot be retrieved safely, do not perform a full 
 Use this pattern:
 
 ```txt
-docs/backups/NEWCHAT/NEWCHAT_YYYY-MM-DD_before-description.md
+docs/backups/{FILE_OR_TOPIC}/{FILE}_YYYY-MM-DD_before-description.md
 ```
 
-For local redundancy, the user keeps a separate local safety copy under:
+Examples:
+
+```txt
+docs/backups/NEWCHAT/NEWCHAT_2026-05-30_before-connect-doc-update.md
+docs/backups/README/README_2026-05-30_before-restructure.md
+```
+
+Local redundancy is also recommended for critical project instructions. Example:
 
 ```txt
 CRITICAL/
 ```
 
-When `NEWCHAT.md` changes, provide the updated full text so the local `CRITICAL` copy can be updated.
+When a critical startup/context document changes, provide the full updated text so the local redundant copy can be updated.
 
 ## Golden savepoints
 
 Golden branches mark known-good approved states. They are not working branches.
 
-Use golden branches for customer-facing states that are approved and worth preserving before future risky work.
+Use golden branches for customer-facing states or functional states that are approved and worth preserving before future risky work.
 
-Current golden branch:
+Pattern:
+
+```txt
+golden/approved-state-name
+```
+
+Examples:
 
 ```txt
 golden/connect-approved
+golden/create-page-approved
+golden/vendor-page-approved
 ```
 
-Meaning:
+## Backup branches
+
+Backup branches are restore points before risky work.
+
+Pattern:
 
 ```txt
-Known-good approved Connect/Add Phone customer-facing state.
+backup/YYYY-MM-DD-before-description
+backup/short-description
 ```
 
-## Current doc backup branch
-
-Current branch backup before NEWCHAT.md doc work:
+Examples:
 
 ```txt
+backup/2026-05-30-before-newchat-update
 backup/newchat-before-connect-doc-update
-```
-
-Meaning:
-
-```txt
-Recoverable repo state before updating NEWCHAT.md with the approved Connect/Add Phone and repo safety protocol notes.
 ```
 
 ## Branch naming
@@ -205,7 +239,7 @@ Did any secrets appear?
 Did generated or accidental changes appear?
 Does the diff match the request?
 Does the live page or relevant flow still work?
-Does NEWCHAT.md need an update after approval?
+Does project documentation need an update after approval?
 ```
 
 ## Recovery rule
@@ -219,4 +253,65 @@ Identify the last known-good branch or commit.
 Compare diff.
 Restore deliberately.
 Document what happened.
+```
+
+---
+
+# Project Addendum: RopeBridge / SamplePass
+
+Current repo:
+
+```txt
+lukebrush555-hue/ropebridge-core
+```
+
+Current golden branch:
+
+```txt
+golden/connect-approved
+```
+
+Meaning:
+
+```txt
+Known-good approved Connect/Add Phone customer-facing state.
+```
+
+Current doc backup branch:
+
+```txt
+backup/newchat-before-connect-doc-update
+```
+
+Meaning:
+
+```txt
+Recoverable repo state before updating project docs with the approved Connect/Add Phone and repo safety protocol notes.
+```
+
+Critical RopeBridge files include:
+
+```txt
+NEWCHAT.md
+README.md
+PROJECT_CONTEXT.md
+AGENTS.md
+SECURITY.md
+archetypes/claim/index.html
+archetypes/claim/app.js
+archetypes/claim/create/create.js
+go/registry.js
+.github/workflows/*
+```
+
+Local redundant copy location used by the user:
+
+```txt
+CRITICAL/
+```
+
+Rule:
+
+```txt
+When NEWCHAT.md changes, provide the full updated text so the local CRITICAL copy can be updated.
 ```
