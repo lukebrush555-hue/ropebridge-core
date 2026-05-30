@@ -8,7 +8,7 @@ window.ROPEBRIDGE_CONFIG = {
     links: {
       order: "https://example.com/order",
       instagram: "https://instagram.com/example",
-      facebook: "https://facebook.com/example",
+      facebook: "https://example.com",
       website: "https://example.com"
     }
   },
@@ -23,7 +23,6 @@ window.ROPEBRIDGE_CONFIG = {
   copy: {
     connectHeadline: "Scan the QR code. Get the thing.",
     connectSubheadline: "No passwords. No profiles. No problems.",
-    connectBody: "No passwords. No profiles. No problems.",
     connectPrimaryAction: "Continue",
     connectedHeadline: "You’re connected.",
     connectedBody: "Next time you scan, we’ll know where to pick up. You can also use this page to find this vendor again.",
