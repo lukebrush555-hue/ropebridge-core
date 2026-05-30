@@ -8,7 +8,7 @@ window.ROPEBRIDGE_CONFIG = {
     links: {
       order: "https://example.com/order",
       instagram: "https://instagram.com/example",
-      facebook: "https://example.com",
+      facebook: "https://facebook.com/example",
       website: "https://example.com"
     }
   },
